@@ -35,12 +35,6 @@ class Ui_main_window(object):
         self.label_2.setPixmap(QtGui.QPixmap(":/res/main_icon.svg"))
         self.label_2.setScaledContents(True)
         self.label_2.setObjectName("label_2")
-        self.label_5 = QtWidgets.QLabel(self.centralwidget)
-        self.label_5.setGeometry(QtCore.QRect(340, 70, 911, 591))
-        self.label_5.setText("")
-        self.label_5.setPixmap(QtGui.QPixmap(":/res/video_capture_template.svg"))
-        self.label_5.setScaledContents(True)
-        self.label_5.setObjectName("label_5")
         self.splitter = QtWidgets.QSplitter(self.centralwidget)
         self.splitter.setGeometry(QtCore.QRect(95, 580, 190, 90))
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
@@ -93,9 +87,23 @@ class Ui_main_window(object):
         self.pushButton_2.setStyleSheet("    border-radius: 20px;\n"
 "    background-color: rgb(217, 217, 217);")
         self.pushButton_2.setObjectName("pushButton_2")
+        self.functions_widget = QtWidgets.QStackedWidget(self.centralwidget)
+        self.functions_widget.setGeometry(QtCore.QRect(329, 59, 900, 600))
+        self.functions_widget.setStyleSheet("background-color: rgb(217, 217, 217);\n"
+"border-radius: 20px;")
+        self.functions_widget.setObjectName("functions_widget")
+        self.page = QtWidgets.QWidget()
+        self.page.setStyleSheet("background-color: rgb(255, 0, 0);")
+        self.page.setObjectName("page")
+        self.functions_widget.addWidget(self.page)
+        self.page_2 = QtWidgets.QWidget()
+        self.page_2.setStyleSheet("background-color: rgb(85, 85, 255);")
+        self.page_2.setObjectName("page_2")
+        self.functions_widget.addWidget(self.page_2)
         main_window.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(main_window)
+        self.functions_widget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(main_window)
 
     def retranslateUi(self, main_window):
