@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>HandSight - wanna see your gesture</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(62, 65, 74);</string>
@@ -189,18 +189,8 @@
 border-radius: 20px;</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>-1</number>
     </property>
-    <widget class="QWidget" name="page">
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 0, 0);</string>
-     </property>
-    </widget>
-    <widget class="QWidget" name="page_2">
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(85, 85, 255);</string>
-     </property>
-    </widget>
    </widget>
   </widget>
  </widget>

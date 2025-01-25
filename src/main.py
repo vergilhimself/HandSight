@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import Qt
 from src.gui.content_window import Ui_main_window
-from src.funcs.functions import VideoProcessor
+from src.funcs.video_processor import VideoProcessor
 
 from src.gui.video_widget import VideoWidget
 
