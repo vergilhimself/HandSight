@@ -144,7 +144,7 @@
       <string>Настройки</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_3">
+    <widget class="QPushButton" name="gestures_button">
      <property name="font">
       <font>
        <family>Comic Sans MS</family>
@@ -156,10 +156,10 @@
     background-color: rgb(217, 217, 217);</string>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>Меню Жестов</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="exit_button">
      <property name="font">
       <font>
        <family>Comic Sans MS</family>
@@ -171,7 +171,7 @@
     background-color: rgb(217, 217, 217);</string>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>Выйти</string>
      </property>
     </widget>
    </widget>

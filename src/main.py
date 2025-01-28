@@ -1,10 +1,11 @@
+# D:\Projects\HandSight\src\main.py
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import Qt
 from src.gui.content_window import Ui_main_window
 from src.funcs.video_processor import VideoProcessor
-from src.gui.widgets import VideoWidget, SettingsWidget
+from src.gui.widgets import VideoWidget, SettingsWidget, GesturesWidget
 from src.funcs.navigation import NavigationManager
 
 
@@ -16,14 +17,18 @@ class MainWindow(QMainWindow):
 
         self.video_widget = VideoWidget()
         self.settings_widget = SettingsWidget()
+        # self.gestures_widget = GesturesWidget() # Теперь создается в NavigationManager
 
         self.ui.functions_widget.addWidget(self.video_widget)
         self.ui.functions_widget.addWidget(self.settings_widget)
+        # self.ui.functions_widget.addWidget(self.gestures_widget) # Теперь добавляется в NavigationManager
 
         self.navigation_manager = NavigationManager(self)
 
         self.ui.video_stream_button.clicked.connect(self.navigation_manager.show_video_widget)
         self.ui.settings_button.clicked.connect(self.navigation_manager.show_settings_widget)
+        self.ui.gestures_button.clicked.connect(self.navigation_manager.show_gestures_widget) # Подключение к новому методу
+        self.ui.exit_button.clicked.connect(self.navigation_manager.exit_app) # Подключение кнопки выхода
 
         self.video_processor = VideoProcessor()
         self.video_processor.frame_ready.connect(self.update_frame)

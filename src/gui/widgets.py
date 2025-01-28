@@ -17,7 +17,12 @@ class VideoWidget(QWidget, Ui_video_widget):
         self.video_label.setPixmap(pixmap.scaled(self.video_label.size(), Qt.KeepAspectRatio))
 
 
-class SettingsWidget(QWidget, Ui_settings_widget):  # Проверьте этот класс
+class SettingsWidget(QWidget, Ui_settings_widget):
    def __init__(self, parent=None):
        super().__init__(parent)
-       self.setupUi(self) # Проверьте наличие этой строки
+       self.setupUi(self)
+
+class GesturesWidget(QWidget, Ui_video_widget):
+   def __init__(self, parent=None):
+       super().__init__(parent)
+       self.setupUi(self)
