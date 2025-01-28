@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>settings_widget</class>
+ <widget class="QWidget" name="settings_widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>settings</string>
+  </property>
+  <widget class="QSplitter" name="splitter_2">
+   <property name="geometry">
+    <rect>
+     <x>42</x>
+     <y>50</y>
+     <width>391</width>
+     <height>480</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+   <property name="handleWidth">
+    <number>10</number>
+   </property>
+   <widget class="QLabel" name="device_label">
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>20</pointsize>
+      <italic>false</italic>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(62, 65, 74);
+color: rgb(217, 217, 217);
+border-radius:25px;</string>
+    </property>
+    <property name="text">
+     <string>Устройство</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="width_label">
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>20</pointsize>
+      <italic>false</italic>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(62, 65, 74);
+color: rgb(217, 217, 217);
+border-radius:25px;</string>
+    </property>
+    <property name="text">
+     <string>Ширина кадра</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="height_label">
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>20</pointsize>
+      <italic>false</italic>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(62, 65, 74);
+color: rgb(217, 217, 217);
+border-radius:25px;</string>
+    </property>
+    <property name="text">
+     <string>Высота кадра</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="use_static_image_mode_label">
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>20</pointsize>
+      <italic>false</italic>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(62, 65, 74);
+color: rgb(217, 217, 217);
+border-radius:25px;</string>
+    </property>
+    <property name="text">
+     <string>Поток жестов</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="min_detection_confidence_label">
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>20</pointsize>
+      <italic>false</italic>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(62, 65, 74);
+color: rgb(217, 217, 217);
+border-radius:25px;</string>
+    </property>
+    <property name="text">
+     <string>Уверенность обнаружения</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="min_tracking_confidence_label">
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>20</pointsize>
+      <italic>false</italic>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(62, 65, 74);
+color: rgb(217, 217, 217);
+border-radius:25px;</string>
+    </property>
+    <property name="text">
+     <string>Уверенность отслеживания</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="use_brect_label">
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>20</pointsize>
+      <italic>false</italic>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(62, 65, 74);
+color: rgb(217, 217, 217);
+border-radius:25px;</string>
+    </property>
+    <property name="text">
+     <string>Отрисовка площади руки</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QCheckBox" name="use_static_image_mode">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>260</y>
+     <width>390</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QCheckBox {
+	background-color: rgb(62, 65, 74);
+	color: rgb(217, 217, 217);
+	border-radius: 25px;
+}
+QCheckBox::indicator  {
+ subcontrol-origin: border;
+    subcontrol-position: center;
+	 width: 60px;
+	height: 60px;
+}</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="device">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>50</y>
+     <width>390</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>-1</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QSpinBox {
+	background-color: rgb(62, 65, 74);
+	color: rgb(217, 217, 217);
+	border-radius: 25px;
+	font-family: &quot;Comic Sans MS&quot;;
+    font-size: 20px;
+}
+QSpinBox::up-button  {
+ subcontrol-origin: border;
+    subcontrol-position: top right;
+	min-width: 40px;
+	min_height: 25px;
+}
+QSpinBox::down-button  {
+ subcontrol-origin: border;
+    subcontrol-position: bottom right;
+	min-width: 40px;
+	min_height: 25px;
+}
+QSpinBox::text {
+	padding-right: 20px;
+}
+</string>
+   </property>
+   <property name="buttonSymbols">
+    <enum>QAbstractSpinBox::UpDownArrows</enum>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="min_detection_confidence">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>330</y>
+     <width>390</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>-1</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QSpinBox {
+	background-color: rgb(62, 65, 74);
+	color: rgb(217, 217, 217);
+	border-radius: 25px;
+	font-family: &quot;Comic Sans MS&quot;;
+    font-size: 20px;
+}
+QSpinBox::up-button  {
+ subcontrol-origin: border;
+    subcontrol-position: top right;
+	min-width: 40px;
+	min_height: 25px;
+}
+QSpinBox::down-button  {
+ subcontrol-origin: border;
+    subcontrol-position: bottom right;
+	min-width: 40px;
+	min_height: 25px;
+}
+</string>
+   </property>
+   <property name="buttonSymbols">
+    <enum>QAbstractSpinBox::UpDownArrows</enum>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="width">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>120</y>
+     <width>390</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>-1</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QSpinBox {
+	background-color: rgb(62, 65, 74);
+	color: rgb(217, 217, 217);
+	border-radius: 25px;
+	font-family: &quot;Comic Sans MS&quot;;
+    font-size: 20px;
+}
+QSpinBox::up-button  {
+ subcontrol-origin: border;
+    subcontrol-position: top right;
+	min-width: 40px;
+	min_height: 25px;
+}
+QSpinBox::down-button  {
+ subcontrol-origin: border;
+    subcontrol-position: bottom right;
+	min-width: 40px;
+	min_height: 25px;
+}
+</string>
+   </property>
+   <property name="buttonSymbols">
+    <enum>QAbstractSpinBox::UpDownArrows</enum>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="min_tracking_confidence">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>400</y>
+     <width>390</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>-1</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QSpinBox {
+	background-color: rgb(62, 65, 74);
+	color: rgb(217, 217, 217);
+	border-radius: 25px;
+	font-family: &quot;Comic Sans MS&quot;;
+    font-size: 20px;
+}
+QSpinBox::up-button  {
+ subcontrol-origin: border;
+    subcontrol-position: top right;
+	min-width: 40px;
+	min_height: 25px;
+}
+QSpinBox::down-button  {
+ subcontrol-origin: border;
+    subcontrol-position: bottom right;
+	min-width: 40px;
+	min_height: 25px;
+}
+</string>
+   </property>
+   <property name="buttonSymbols">
+    <enum>QAbstractSpinBox::UpDownArrows</enum>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="height">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>190</y>
+     <width>390</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>-1</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QSpinBox {
+	background-color: rgb(62, 65, 74);
+	color: rgb(217, 217, 217);
+	border-radius: 25px;
+	font-family: &quot;Comic Sans MS&quot;;
+    font-size: 20px;
+}
+QSpinBox::up-button  {
+ subcontrol-origin: border;
+    subcontrol-position: top right;
+	min-width: 40px;
+	min_height: 25px;
+}
+QSpinBox::down-button  {
+ subcontrol-origin: border;
+    subcontrol-position: bottom right;
+	min-width: 40px;
+	min_height: 25px;
+}
+</string>
+   </property>
+   <property name="buttonSymbols">
+    <enum>QAbstractSpinBox::UpDownArrows</enum>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="use_brect">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>470</y>
+     <width>390</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QCheckBox {
+	background-color: rgb(62, 65, 74);
+	color: rgb(217, 217, 217);
+	border-radius: 25px;
+}
+QCheckBox::indicator  {
+ subcontrol-origin: border;
+    subcontrol-position: center;
+	 width: 60px;
+	height: 60px;
+}</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
