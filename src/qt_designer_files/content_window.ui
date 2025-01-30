@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>HandSight - wanna see your gesture</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(62, 65, 74);</string>
@@ -20,7 +20,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>80</x>
       <y>180</y>
       <width>220</width>
       <height>70</height>
@@ -45,7 +45,7 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>100</x>
       <y>60</y>
       <width>181</width>
       <height>121</height>
@@ -56,25 +56,6 @@
     </property>
     <property name="pixmap">
      <pixmap resource="resources.qrc">:/res/main_icon.svg</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>70</y>
-      <width>911</width>
-      <height>591</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap resource="resources.qrc">:/res/video_capture_template.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -133,7 +114,7 @@
     <property name="handleWidth">
      <number>15</number>
     </property>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="video_stream_button">
      <property name="font">
       <font>
        <family>Comic Sans MS</family>
@@ -145,10 +126,10 @@
     background-color: rgb(217, 217, 217);</string>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>Трансляция</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_4">
+    <widget class="QPushButton" name="settings_button">
      <property name="font">
       <font>
        <family>Comic Sans MS</family>
@@ -160,10 +141,10 @@
     background-color: rgb(217, 217, 217);</string>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>Настройки</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_3">
+    <widget class="QPushButton" name="gestures_button">
      <property name="font">
       <font>
        <family>Comic Sans MS</family>
@@ -175,10 +156,10 @@
     background-color: rgb(217, 217, 217);</string>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>Меню Жестов</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="exit_button">
      <property name="font">
       <font>
        <family>Comic Sans MS</family>
@@ -190,9 +171,26 @@
     background-color: rgb(217, 217, 217);</string>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>Выйти</string>
      </property>
     </widget>
+   </widget>
+   <widget class="QStackedWidget" name="functions_widget">
+    <property name="geometry">
+     <rect>
+      <x>329</x>
+      <y>59</y>
+      <width>900</width>
+      <height>600</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(217, 217, 217);
+border-radius: 20px;</string>
+    </property>
+    <property name="currentIndex">
+     <number>-1</number>
+    </property>
    </widget>
   </widget>
  </widget>
