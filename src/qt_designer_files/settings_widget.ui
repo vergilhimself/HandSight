@@ -169,7 +169,7 @@ border-radius:25px;</string>
     </property>
    </widget>
   </widget>
-  <widget class="QCheckBox" name="use_static_image_mode">
+  <widget class="QCheckBox" name="use_static_image_mode_checkbox">
    <property name="geometry">
     <rect>
      <x>470</x>
@@ -194,8 +194,14 @@ QCheckBox::indicator  {
    <property name="text">
     <string/>
    </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="tristate">
+    <bool>false</bool>
+   </property>
   </widget>
-  <widget class="QSpinBox" name="device">
+  <widget class="QSpinBox" name="device_spinbox">
    <property name="geometry">
     <rect>
      <x>470</x>
@@ -239,48 +245,7 @@ QSpinBox::text {
     <enum>QAbstractSpinBox::UpDownArrows</enum>
    </property>
   </widget>
-  <widget class="QSpinBox" name="min_detection_confidence">
-   <property name="geometry">
-    <rect>
-     <x>470</x>
-     <y>330</y>
-     <width>390</width>
-     <height>60</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Comic Sans MS</family>
-     <pointsize>-1</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QSpinBox {
-	background-color: rgb(62, 65, 74);
-	color: rgb(217, 217, 217);
-	border-radius: 25px;
-	font-family: &quot;Comic Sans MS&quot;;
-    font-size: 20px;
-}
-QSpinBox::up-button  {
- subcontrol-origin: border;
-    subcontrol-position: top right;
-	min-width: 40px;
-	min_height: 25px;
-}
-QSpinBox::down-button  {
- subcontrol-origin: border;
-    subcontrol-position: bottom right;
-	min-width: 40px;
-	min_height: 25px;
-}
-</string>
-   </property>
-   <property name="buttonSymbols">
-    <enum>QAbstractSpinBox::UpDownArrows</enum>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="width">
+  <widget class="QSpinBox" name="width_spinbox">
    <property name="geometry">
     <rect>
      <x>470</x>
@@ -320,49 +285,14 @@ QSpinBox::down-button  {
    <property name="buttonSymbols">
     <enum>QAbstractSpinBox::UpDownArrows</enum>
    </property>
-  </widget>
-  <widget class="QSpinBox" name="min_tracking_confidence">
-   <property name="geometry">
-    <rect>
-     <x>470</x>
-     <y>400</y>
-     <width>390</width>
-     <height>60</height>
-    </rect>
+   <property name="maximum">
+    <number>5000</number>
    </property>
-   <property name="font">
-    <font>
-     <family>Comic Sans MS</family>
-     <pointsize>-1</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QSpinBox {
-	background-color: rgb(62, 65, 74);
-	color: rgb(217, 217, 217);
-	border-radius: 25px;
-	font-family: &quot;Comic Sans MS&quot;;
-    font-size: 20px;
-}
-QSpinBox::up-button  {
- subcontrol-origin: border;
-    subcontrol-position: top right;
-	min-width: 40px;
-	min_height: 25px;
-}
-QSpinBox::down-button  {
- subcontrol-origin: border;
-    subcontrol-position: bottom right;
-	min-width: 40px;
-	min_height: 25px;
-}
-</string>
-   </property>
-   <property name="buttonSymbols">
-    <enum>QAbstractSpinBox::UpDownArrows</enum>
+   <property name="value">
+    <number>960</number>
    </property>
   </widget>
-  <widget class="QSpinBox" name="height">
+  <widget class="QSpinBox" name="height_spinbox">
    <property name="geometry">
     <rect>
      <x>470</x>
@@ -402,8 +332,14 @@ QSpinBox::down-button  {
    <property name="buttonSymbols">
     <enum>QAbstractSpinBox::UpDownArrows</enum>
    </property>
+   <property name="maximum">
+    <number>5000</number>
+   </property>
+   <property name="value">
+    <number>540</number>
+   </property>
   </widget>
-  <widget class="QCheckBox" name="use_brect">
+  <widget class="QCheckBox" name="use_brect_checkbox">
    <property name="geometry">
     <rect>
      <x>470</x>
@@ -427,6 +363,97 @@ QCheckBox::indicator  {
    </property>
    <property name="text">
     <string/>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="min_detection_confidence_doublespinbox">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>330</y>
+     <width>390</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QDoubleSpinBox {
+	background-color: rgb(62, 65, 74);
+	color: rgb(217, 217, 217);
+	border-radius: 25px;
+	font-family: &quot;Comic Sans MS&quot;;
+    font-size: 20px;
+}
+QDoubleSpinBox::up-button  {
+ subcontrol-origin: border;
+    subcontrol-position: top right;
+	min-width: 40px;
+	min_height: 25px;
+}
+QDoubleSpinBox::down-button  {
+ subcontrol-origin: border;
+    subcontrol-position: bottom right;
+	min-width: 40px;
+	min_height: 25px;
+}
+</string>
+   </property>
+   <property name="decimals">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <double>1.000000000000000</double>
+   </property>
+   <property name="singleStep">
+    <double>0.100000000000000</double>
+   </property>
+   <property name="value">
+    <double>0.500000000000000</double>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="min_tracking_confidence_doublespinbox">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>400</y>
+     <width>390</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QDoubleSpinBox {
+	background-color: rgb(62, 65, 74);
+	color: rgb(217, 217, 217);
+	border-radius: 25px;
+	font-family: &quot;Comic Sans MS&quot;;
+    font-size: 20px;
+}
+QDoubleSpinBox::up-button  {
+ subcontrol-origin: border;
+    subcontrol-position: top right;
+	min-width: 40px;
+	min_height: 25px;
+}
+QDoubleSpinBox::down-button  {
+ subcontrol-origin: border;
+    subcontrol-position: bottom right;
+	min-width: 40px;
+	min_height: 25px;
+}
+</string>
+   </property>
+   <property name="decimals">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <double>1.000000000000000</double>
+   </property>
+   <property name="singleStep">
+    <double>0.100000000000000</double>
+   </property>
+   <property name="value">
+    <double>0.500000000000000</double>
    </property>
   </widget>
  </widget>

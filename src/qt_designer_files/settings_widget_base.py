@@ -97,9 +97,9 @@ class Ui_settings_widget(object):
 "border-radius:25px;")
         self.use_brect_label.setAlignment(QtCore.Qt.AlignCenter)
         self.use_brect_label.setObjectName("use_brect_label")
-        self.use_static_image_mode = QtWidgets.QCheckBox(settings_widget)
-        self.use_static_image_mode.setGeometry(QtCore.QRect(470, 260, 390, 60))
-        self.use_static_image_mode.setStyleSheet("QCheckBox {\n"
+        self.use_static_image_mode_checkbox = QtWidgets.QCheckBox(settings_widget)
+        self.use_static_image_mode_checkbox.setGeometry(QtCore.QRect(470, 260, 390, 60))
+        self.use_static_image_mode_checkbox.setStyleSheet("QCheckBox {\n"
 "    background-color: rgb(62, 65, 74);\n"
 "    color: rgb(217, 217, 217);\n"
 "    border-radius: 25px;\n"
@@ -110,15 +110,17 @@ class Ui_settings_widget(object):
 "     width: 60px;\n"
 "    height: 60px;\n"
 "}")
-        self.use_static_image_mode.setText("")
-        self.use_static_image_mode.setObjectName("use_static_image_mode")
-        self.device = QtWidgets.QSpinBox(settings_widget)
-        self.device.setGeometry(QtCore.QRect(470, 50, 390, 60))
+        self.use_static_image_mode_checkbox.setText("")
+        self.use_static_image_mode_checkbox.setChecked(True)
+        self.use_static_image_mode_checkbox.setTristate(False)
+        self.use_static_image_mode_checkbox.setObjectName("use_static_image_mode_checkbox")
+        self.device_spinbox = QtWidgets.QSpinBox(settings_widget)
+        self.device_spinbox.setGeometry(QtCore.QRect(470, 50, 390, 60))
         font = QtGui.QFont()
         font.setFamily("Comic Sans MS")
         font.setPointSize(-1)
-        self.device.setFont(font)
-        self.device.setStyleSheet("QSpinBox {\n"
+        self.device_spinbox.setFont(font)
+        self.device_spinbox.setStyleSheet("QSpinBox {\n"
 "    background-color: rgb(62, 65, 74);\n"
 "    color: rgb(217, 217, 217);\n"
 "    border-radius: 25px;\n"
@@ -141,15 +143,15 @@ class Ui_settings_widget(object):
 "    padding-right: 20px;\n"
 "}\n"
 "")
-        self.device.setButtonSymbols(QtWidgets.QAbstractSpinBox.UpDownArrows)
-        self.device.setObjectName("device")
-        self.min_detection_confidence = QtWidgets.QSpinBox(settings_widget)
-        self.min_detection_confidence.setGeometry(QtCore.QRect(470, 330, 390, 60))
+        self.device_spinbox.setButtonSymbols(QtWidgets.QAbstractSpinBox.UpDownArrows)
+        self.device_spinbox.setObjectName("device_spinbox")
+        self.width_spinbox = QtWidgets.QSpinBox(settings_widget)
+        self.width_spinbox.setGeometry(QtCore.QRect(470, 120, 390, 60))
         font = QtGui.QFont()
         font.setFamily("Comic Sans MS")
         font.setPointSize(-1)
-        self.min_detection_confidence.setFont(font)
-        self.min_detection_confidence.setStyleSheet("QSpinBox {\n"
+        self.width_spinbox.setFont(font)
+        self.width_spinbox.setStyleSheet("QSpinBox {\n"
 "    background-color: rgb(62, 65, 74);\n"
 "    color: rgb(217, 217, 217);\n"
 "    border-radius: 25px;\n"
@@ -169,15 +171,17 @@ class Ui_settings_widget(object):
 "    min_height: 25px;\n"
 "}\n"
 "")
-        self.min_detection_confidence.setButtonSymbols(QtWidgets.QAbstractSpinBox.UpDownArrows)
-        self.min_detection_confidence.setObjectName("min_detection_confidence")
-        self.width = QtWidgets.QSpinBox(settings_widget)
-        self.width.setGeometry(QtCore.QRect(470, 120, 390, 60))
+        self.width_spinbox.setButtonSymbols(QtWidgets.QAbstractSpinBox.UpDownArrows)
+        self.width_spinbox.setMaximum(5000)
+        self.width_spinbox.setProperty("value", 960)
+        self.width_spinbox.setObjectName("width_spinbox")
+        self.height_spinbox = QtWidgets.QSpinBox(settings_widget)
+        self.height_spinbox.setGeometry(QtCore.QRect(470, 190, 390, 60))
         font = QtGui.QFont()
         font.setFamily("Comic Sans MS")
         font.setPointSize(-1)
-        self.width.setFont(font)
-        self.width.setStyleSheet("QSpinBox {\n"
+        self.height_spinbox.setFont(font)
+        self.height_spinbox.setStyleSheet("QSpinBox {\n"
 "    background-color: rgb(62, 65, 74);\n"
 "    color: rgb(217, 217, 217);\n"
 "    border-radius: 25px;\n"
@@ -197,67 +201,13 @@ class Ui_settings_widget(object):
 "    min_height: 25px;\n"
 "}\n"
 "")
-        self.width.setButtonSymbols(QtWidgets.QAbstractSpinBox.UpDownArrows)
-        self.width.setObjectName("width")
-        self.min_tracking_confidence = QtWidgets.QSpinBox(settings_widget)
-        self.min_tracking_confidence.setGeometry(QtCore.QRect(470, 400, 390, 60))
-        font = QtGui.QFont()
-        font.setFamily("Comic Sans MS")
-        font.setPointSize(-1)
-        self.min_tracking_confidence.setFont(font)
-        self.min_tracking_confidence.setStyleSheet("QSpinBox {\n"
-"    background-color: rgb(62, 65, 74);\n"
-"    color: rgb(217, 217, 217);\n"
-"    border-radius: 25px;\n"
-"    font-family: \"Comic Sans MS\";\n"
-"    font-size: 20px;\n"
-"}\n"
-"QSpinBox::up-button  {\n"
-" subcontrol-origin: border;\n"
-"    subcontrol-position: top right;\n"
-"    min-width: 40px;\n"
-"    min_height: 25px;\n"
-"}\n"
-"QSpinBox::down-button  {\n"
-" subcontrol-origin: border;\n"
-"    subcontrol-position: bottom right;\n"
-"    min-width: 40px;\n"
-"    min_height: 25px;\n"
-"}\n"
-"")
-        self.min_tracking_confidence.setButtonSymbols(QtWidgets.QAbstractSpinBox.UpDownArrows)
-        self.min_tracking_confidence.setObjectName("min_tracking_confidence")
-        self.height = QtWidgets.QSpinBox(settings_widget)
-        self.height.setGeometry(QtCore.QRect(470, 190, 390, 60))
-        font = QtGui.QFont()
-        font.setFamily("Comic Sans MS")
-        font.setPointSize(-1)
-        self.height.setFont(font)
-        self.height.setStyleSheet("QSpinBox {\n"
-"    background-color: rgb(62, 65, 74);\n"
-"    color: rgb(217, 217, 217);\n"
-"    border-radius: 25px;\n"
-"    font-family: \"Comic Sans MS\";\n"
-"    font-size: 20px;\n"
-"}\n"
-"QSpinBox::up-button  {\n"
-" subcontrol-origin: border;\n"
-"    subcontrol-position: top right;\n"
-"    min-width: 40px;\n"
-"    min_height: 25px;\n"
-"}\n"
-"QSpinBox::down-button  {\n"
-" subcontrol-origin: border;\n"
-"    subcontrol-position: bottom right;\n"
-"    min-width: 40px;\n"
-"    min_height: 25px;\n"
-"}\n"
-"")
-        self.height.setButtonSymbols(QtWidgets.QAbstractSpinBox.UpDownArrows)
-        self.height.setObjectName("height")
-        self.use_brect = QtWidgets.QCheckBox(settings_widget)
-        self.use_brect.setGeometry(QtCore.QRect(470, 470, 390, 60))
-        self.use_brect.setStyleSheet("QCheckBox {\n"
+        self.height_spinbox.setButtonSymbols(QtWidgets.QAbstractSpinBox.UpDownArrows)
+        self.height_spinbox.setMaximum(5000)
+        self.height_spinbox.setProperty("value", 540)
+        self.height_spinbox.setObjectName("height_spinbox")
+        self.use_brect_checkbox = QtWidgets.QCheckBox(settings_widget)
+        self.use_brect_checkbox.setGeometry(QtCore.QRect(470, 470, 390, 60))
+        self.use_brect_checkbox.setStyleSheet("QCheckBox {\n"
 "    background-color: rgb(62, 65, 74);\n"
 "    color: rgb(217, 217, 217);\n"
 "    border-radius: 25px;\n"
@@ -268,8 +218,63 @@ class Ui_settings_widget(object):
 "     width: 60px;\n"
 "    height: 60px;\n"
 "}")
-        self.use_brect.setText("")
-        self.use_brect.setObjectName("use_brect")
+        self.use_brect_checkbox.setText("")
+        self.use_brect_checkbox.setChecked(True)
+        self.use_brect_checkbox.setObjectName("use_brect_checkbox")
+        self.min_detection_confidence_doublespinbox = QtWidgets.QDoubleSpinBox(settings_widget)
+        self.min_detection_confidence_doublespinbox.setGeometry(QtCore.QRect(470, 330, 390, 60))
+        self.min_detection_confidence_doublespinbox.setStyleSheet("QDoubleSpinBox {\n"
+"    background-color: rgb(62, 65, 74);\n"
+"    color: rgb(217, 217, 217);\n"
+"    border-radius: 25px;\n"
+"    font-family: \"Comic Sans MS\";\n"
+"    font-size: 20px;\n"
+"}\n"
+"QDoubleSpinBox::up-button  {\n"
+" subcontrol-origin: border;\n"
+"    subcontrol-position: top right;\n"
+"    min-width: 40px;\n"
+"    min_height: 25px;\n"
+"}\n"
+"QDoubleSpinBox::down-button  {\n"
+" subcontrol-origin: border;\n"
+"    subcontrol-position: bottom right;\n"
+"    min-width: 40px;\n"
+"    min_height: 25px;\n"
+"}\n"
+"")
+        self.min_detection_confidence_doublespinbox.setDecimals(1)
+        self.min_detection_confidence_doublespinbox.setMaximum(1.0)
+        self.min_detection_confidence_doublespinbox.setSingleStep(0.1)
+        self.min_detection_confidence_doublespinbox.setProperty("value", 0.5)
+        self.min_detection_confidence_doublespinbox.setObjectName("min_detection_confidence_doublespinbox")
+        self.min_tracking_confidence_doublespinbox = QtWidgets.QDoubleSpinBox(settings_widget)
+        self.min_tracking_confidence_doublespinbox.setGeometry(QtCore.QRect(470, 400, 390, 60))
+        self.min_tracking_confidence_doublespinbox.setStyleSheet("QDoubleSpinBox {\n"
+"    background-color: rgb(62, 65, 74);\n"
+"    color: rgb(217, 217, 217);\n"
+"    border-radius: 25px;\n"
+"    font-family: \"Comic Sans MS\";\n"
+"    font-size: 20px;\n"
+"}\n"
+"QDoubleSpinBox::up-button  {\n"
+" subcontrol-origin: border;\n"
+"    subcontrol-position: top right;\n"
+"    min-width: 40px;\n"
+"    min_height: 25px;\n"
+"}\n"
+"QDoubleSpinBox::down-button  {\n"
+" subcontrol-origin: border;\n"
+"    subcontrol-position: bottom right;\n"
+"    min-width: 40px;\n"
+"    min_height: 25px;\n"
+"}\n"
+"")
+        self.min_tracking_confidence_doublespinbox.setDecimals(1)
+        self.min_tracking_confidence_doublespinbox.setMaximum(1.0)
+        self.min_tracking_confidence_doublespinbox.setSingleStep(0.1)
+        self.min_tracking_confidence_doublespinbox.setProperty("value", 0.5)
+        self.min_tracking_confidence_doublespinbox.setObjectName("min_tracking_confidence_doublespinbox")
 
         self.retranslateUi(settings_widget)
         QtCore.QMetaObject.connectSlotsByName(settings_widget)
