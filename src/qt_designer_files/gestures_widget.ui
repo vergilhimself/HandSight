@@ -25,6 +25,14 @@
      <height>600</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>14</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
   </widget>
   <widget class="QPushButton" name="add_gesture_button">
    <property name="geometry">

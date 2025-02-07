@@ -4,7 +4,7 @@ from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import Qt
 from src.gui.content_window import Ui_main_window
 from src.funcs.video_processor import VideoProcessor
-from src.gui.widgets import VideoWidget, SettingsWidget, GesturesWidget, LoginWidget  # Import LoginWidget
+from src.gui.widgets import VideoWidget, SettingsWidget, GesturesWidget, LoginWidget
 from src.funcs.navigation import NavigationManager
 
 
