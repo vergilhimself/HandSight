@@ -1,0 +1,8 @@
+# Основные зависимости
+mediapipe==0.8.1
+opencv-python>=3.4.2
+sqlite3
+PyQt5
+numpy
+#Для выполнения впишите в командной строке
+#pip install -r requirements.txt

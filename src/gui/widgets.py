@@ -2,19 +2,17 @@ from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout
     QListWidget, QListWidgetItem, QHBoxLayout, QFrame, QInputDialog, QKeySequenceEdit
 from PyQt5.QtGui import QKeySequence, QFont, QImage, QPixmap
 from PyQt5.QtCore import Qt
-from src.qt_designer_files.gestures_widget_base import Ui_gestures_widget
-from src.qt_designer_files.login_widget_base import Ui_login_widget
-from src.qt_designer_files.video_widget_base import Ui_video_widget
-from src.qt_designer_files.settings_widget_base import Ui_settings_widget
+from qt_designer_files.gestures_widget_base import Ui_gestures_widget
+from qt_designer_files.login_widget_base import Ui_login_widget
+from qt_designer_files.video_widget_base import Ui_video_widget
+from qt_designer_files.settings_widget_base import Ui_settings_widget
 # import для db
-from src.funcs.db_funcs import get_user_gestures, update_keyboard_shortcut, remove_user_gesture, get_user, create_user, \
+from funcs.db_funcs import get_user_gestures, update_keyboard_shortcut, remove_user_gesture, get_user, create_user, \
     hash_password, add_new_custom_gesture
 import os
 import sqlite3
 import json
-
-
-# region виджеты
+from funcs.video_processor import VideoProcessor
 
 def load_standard_gestures():
     try:
@@ -32,9 +30,17 @@ def load_standard_gestures():
 
 
 class VideoWidget(QWidget, Ui_video_widget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, video_processor = None):
         super().__init__(parent)
         self.setupUi(self)
+        self.video_processor = video_processor
+
+    def set_mode(self, mode):
+        if self.video_processor:
+            self.video_processor.mode = mode
+            print(f"Режим изменен на: {mode}")
+        else:
+            print("video_processor не установлен")
 
     def update_frame(self, frame):
         height, width, channel = frame.shape
@@ -48,7 +54,7 @@ class SettingsWidget(QWidget, Ui_settings_widget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        self.video_processor = None
+        self.video_processor = VideoProcessor()
         self.load_settings()
 
         self.device_spinbox.valueChanged.connect(self.save_settings)
