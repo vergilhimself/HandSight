@@ -1,8 +1,19 @@
 # Основные зависимости
-mediapipe==0.8.1
-opencv-python>=3.4.2
-sqlite3
+absl-py
+attrs>=19.1.0
+flatbuffers>=2.0
+jax
+jaxlib
+matplotlib
+numpy<2
+opencv-contrib-python
+protobuf>=4.25.3,<5
+sounddevice>=0.4.4
+sentencepiece
+
+tensorflow
+mediapipe
 PyQt5
-numpy
+
 #Для выполнения впишите в командной строке
 #pip install -r requirements.txt

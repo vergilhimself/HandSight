@@ -1,10 +1,10 @@
 import copy
+from __main__ import mp
 import argparse
 import itertools
 import threading
 import cv2 as cv
 import numpy as np
-import mediapipe as mp
 from PyQt5.QtCore import pyqtSignal, QObject, Qt
 import csv
 from collections import Counter
@@ -82,7 +82,6 @@ class VideoProcessor(QObject):
     def stop(self):
         self.running = False
 
-
     def _run(self):
         cap = cv.VideoCapture(self.cap_device)
         cap.set(cv.CAP_PROP_FRAME_WIDTH, self.cap_width)
@@ -96,7 +95,6 @@ class VideoProcessor(QObject):
 
             # Process Key (ESC: end)
             key = cv.waitKey(10)
-
 
             # Camera capture
             ret, image = cap.read()
@@ -153,11 +151,14 @@ class VideoProcessor(QObject):
 
                     # Get gesture names
                     try:
-                        hand_sign_text = self.keypoint_classifier_labels[hand_sign_id] if self.keypoint_classifier_labels and 0 <= hand_sign_id < len(
+                        hand_sign_text = self.keypoint_classifier_labels[
+                            hand_sign_id] if self.keypoint_classifier_labels and 0 <= hand_sign_id < len(
                             self.keypoint_classifier_labels) else "Unknown"
                         finger_gesture_text = self.point_history_classifier_labels[
-                            most_common_fg_id[0][0]] if self.point_history_classifier_labels and most_common_fg_id and 0 <= most_common_fg_id[0][
-                            0] < len(self.point_history_classifier_labels) else "Unknown"
+                            most_common_fg_id[0][
+                                0]] if self.point_history_classifier_labels and most_common_fg_id and 0 <= \
+                                       most_common_fg_id[0][
+                                           0] < len(self.point_history_classifier_labels) else "Unknown"
                     except IndexError as e:
                         print(
                             f"IndexError: {e}. Check classifier outputs and label files.")
@@ -166,9 +167,9 @@ class VideoProcessor(QObject):
 
                     # Drawing part
                     debug_image = self.draw_bounding_rect(self.use_brect,
-                                                        debug_image, brect)
+                                                          debug_image, brect)
                     debug_image = self.draw_landmarks(debug_image,
-                                                        landmark_list)
+                                                      landmark_list)
                     debug_image = self.draw_info_text(
                         debug_image,
                         brect,
@@ -182,14 +183,13 @@ class VideoProcessor(QObject):
                 self.point_history.append([0, 0])  # Append to self.point_history
 
             debug_image = self.draw_point_history(debug_image,
-                                                    self.point_history)  # Use self.point_history
+                                                  self.point_history)  # Use self.point_history
             debug_image = self.draw_info(debug_image, self.fps)
 
             # Screen reflection
             self.frame_ready.emit(debug_image)
 
         cap.release()
-
 
     def calc_bounding_rect(self, image, landmarks):
         image_width, image_height = image.shape[1], image.shape[0]
@@ -203,7 +203,7 @@ class VideoProcessor(QObject):
             landmark_point = [np.array((landmark_x, landmark_y))]
 
             landmark_array = np.append(landmark_array, landmark_point,
-                                        axis=0)
+                                       axis=0)
 
         x, y, w, h = cv.boundingRect(landmark_array)
 
