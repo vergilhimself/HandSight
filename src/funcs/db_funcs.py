@@ -3,9 +3,11 @@ import hashlib
 import json
 import os
 
+
 def hash_password(password):
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
     return hashed_password
+
 
 def get_user(db_path, login, password):
     try:
@@ -19,6 +21,7 @@ def get_user(db_path, login, password):
         print(f"Ошибка при выполнении запроса get_user: {e}")
         return None
 
+
 def create_user(db_path, login, password):
     try:
         conn = sqlite3.connect(db_path)
@@ -26,15 +29,16 @@ def create_user(db_path, login, password):
         cursor.execute("SELECT * FROM Users WHERE login = ?", (login,))
         existing_user = cursor.fetchone()
         if existing_user:
-             conn.close()
-             return False # Пользователь существует
+            conn.close()
+            return False  # Пользователь существует
         cursor.execute("INSERT INTO Users (login, password) VALUES (?, ?)", (login, password))
         conn.commit()
         conn.close()
-        return True # Пользователь успешно создан
+        return True  # Пользователь успешно создан
     except sqlite3.Error as e:
-       print(f"Ошибка при выполнении запроса create_user: {e}")
-       return False
+        print(f"Ошибка при выполнении запроса create_user: {e}")
+        return False
+
 
 def add_new_custom_gesture(db_path, user_id, name, data, keyboard_shortcut):
     try:
@@ -53,6 +57,7 @@ def add_new_custom_gesture(db_path, user_id, name, data, keyboard_shortcut):
     except sqlite3.Error as e:
         print(f"Ошибка при выполнении запроса add_new_custom_gesture: {e}")
         return False
+
 
 def get_user_gestures(db_path, user_id):
     try:
@@ -81,6 +86,7 @@ def get_user_gestures(db_path, user_id):
         print(f"Ошибка при выполнении запроса get_user_gestures: {e}")
         return []
 
+
 def remove_user_gesture(db_path, user_id, gesture_id):
     try:
         conn = sqlite3.connect(db_path)
@@ -97,6 +103,7 @@ def remove_user_gesture(db_path, user_id, gesture_id):
     except sqlite3.Error as e:
         print(f"Ошибка при выполнении запроса remove_user_gesture: {e}")
         return False
+
 
 def update_keyboard_shortcut(db_path, gesture_id, user_id, keyboard_shortcut):
     try:

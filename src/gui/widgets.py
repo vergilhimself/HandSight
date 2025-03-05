@@ -28,9 +28,8 @@ def load_standard_gestures():
         QMessageBox.critical(None, "Ошибка", "Ошибка при чтении standard_gestures.json!")
         return []
 
-
 class VideoWidget(QWidget, Ui_video_widget):
-    def __init__(self, parent=None, video_processor = None):
+    def __init__(self, parent=None, video_processor=None):
         super().__init__(parent)
         self.setupUi(self)
         self.video_processor = video_processor

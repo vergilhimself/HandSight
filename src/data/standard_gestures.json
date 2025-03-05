@@ -1,7 +1,27 @@
 [
-  { "id": "hand_peace", "name": "Мир", "is_standard": 1 },
-  { "id": "hand_thumbs_up", "name": "Отлично", "is_standard": 1 },
-  { "id": "hand_pointing_up", "name": "Указание вверх", "is_standard": 1 },
-  { "id": "closed_fist", "name": "Сжатый кулак", "is_standard": 1 },
-  { "id": "open_palm", "name": "Открытая ладонь", "is_standard": 1 }
+  {
+    "id": "hand_peace",
+    "name": "Мир",
+    "is_standard": 1
+  },
+  {
+    "id": "hand_thumbs_up",
+    "name": "Отлично",
+    "is_standard": 1
+  },
+  {
+    "id": "hand_pointing_up",
+    "name": "Указание вверх",
+    "is_standard": 1
+  },
+  {
+    "id": "closed_fist",
+    "name": "Сжатый кулак",
+    "is_standard": 1
+  },
+  {
+    "id": "open_palm",
+    "name": "Открытая ладонь",
+    "is_standard": 1
+  }
 ]

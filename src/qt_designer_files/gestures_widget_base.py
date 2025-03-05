@@ -34,8 +34,8 @@ class Ui_gestures_widget(object):
         font.setWeight(75)
         self.add_gesture_button.setFont(font)
         self.add_gesture_button.setStyleSheet("background-color: rgb(62, 65, 74);\n"
-"color: rgb(255, 255, 255);\n"
-"border-radius: 5px;")
+                                              "color: rgb(255, 255, 255);\n"
+                                              "border-radius: 5px;")
         self.add_gesture_button.setObjectName("add_gesture_button")
 
         self.retranslateUi(gestures_widget)

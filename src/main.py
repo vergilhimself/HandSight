@@ -1,5 +1,5 @@
+import mediapipe as mp
 import sys
-import mediapipe
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import Qt
@@ -7,6 +7,7 @@ from gui.content_window import Ui_main_window
 from funcs.video_processor import VideoProcessor
 from gui.widgets import VideoWidget, SettingsWidget, GesturesWidget, LoginWidget
 from funcs.navigation import NavigationManager
+
 
 class MainWindow(QMainWindow):
     def __init__(self):

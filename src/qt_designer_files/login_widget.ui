@@ -1,263 +1,268 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>login_widget</class>
- <widget class="QWidget" name="login_widget">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>1280</width>
-    <height>720</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
-  <property name="styleSheet">
-   <string notr="true">background-color: rgba(217, 217, 217, 0.5);
-</string>
-  </property>
-  <widget class="QWidget" name="blur_widget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1280</width>
-     <height>720</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(217, 217, 217, 0.5);</string>
-   </property>
-  </widget>
-  <widget class="QWidget" name="widget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>120</y>
-     <width>350</width>
-     <height>450</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgb(62, 65, 74);
-border-color: rgb(217, 217, 217);
-border-width: 3px;
-border-radius: 15px;</string>
-   </property>
-   <widget class="QLabel" name="error_label">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>360</y>
-      <width>230</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Comic Sans MS</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(217, 217, 217);</string>
-    </property>
-    <property name="text">
-     <string>Приветствую в HandSight!</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="password_label">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>180</y>
-      <width>90</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Comic Sans MS</family>
-      <pointsize>14</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>passowrd:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="login_label">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>90</y>
-      <width>48</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Comic Sans MS</family>
-      <pointsize>14</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>login:</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="login_button">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>270</y>
-      <width>190</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Comic Sans MS</family>
-      <pointsize>14</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(62, 65, 74);
-background-color: rgb(217, 217, 217);
-border-radius: 5px;</string>
-    </property>
-    <property name="text">
-     <string>Войти</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="auth_label">
-    <property name="geometry">
-     <rect>
-      <x>88</x>
-      <y>40</y>
-      <width>174</width>
-      <height>39</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Comic Sans MS</family>
-      <pointsize>21</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Авторизация</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="login_line_edit">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>130</y>
-      <width>290</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Comic Sans MS</family>
-      <pointsize>14</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(217, 217, 217);
-color: rgb(62, 65, 74);
-border-radius: 5px;</string>
-    </property>
-    <property name="placeholderText">
-     <string>Enter here</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="register_button">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>320</y>
-      <width>230</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Comic Sans MS</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(62, 65, 74);
-background-color: rgb(217, 217, 217);
-border-radius: 5px;</string>
-    </property>
-    <property name="text">
-     <string>не зарегестрированы?</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="password_line_edit">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>220</y>
-      <width>290</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Comic Sans MS</family>
-      <pointsize>14</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(217, 217, 217);
-color: rgb(62, 65, 74);
-border-radius: 5px;</string>
-    </property>
-    <property name="echoMode">
-     <enum>QLineEdit::Password</enum>
-    </property>
-    <property name="placeholderText">
-     <string>Enter here</string>
-    </property>
-   </widget>
-  </widget>
- </widget>
- <resources/>
- <connections/>
+    <class>login_widget</class>
+    <widget class="QWidget" name="login_widget">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>1280</width>
+                <height>720</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Form</string>
+        </property>
+        <property name="styleSheet">
+            <string notr="true">background-color: rgba(217, 217, 217, 0.5);
+            </string>
+        </property>
+        <widget class="QWidget" name="blur_widget" native="true">
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>1280</width>
+                    <height>720</height>
+                </rect>
+            </property>
+            <property name="styleSheet">
+                <string notr="true">background-color: rgba(217, 217, 217, 0.5);</string>
+            </property>
+        </widget>
+        <widget class="QWidget" name="widget" native="true">
+            <property name="geometry">
+                <rect>
+                    <x>440</x>
+                    <y>120</y>
+                    <width>350</width>
+                    <height>450</height>
+                </rect>
+            </property>
+            <property name="styleSheet">
+                <string notr="true">background-color: rgb(62, 65, 74);
+                    border-color: rgb(217, 217, 217);
+                    border-width: 3px;
+                    border-radius: 15px;
+                </string>
+            </property>
+            <widget class="QLabel" name="error_label">
+                <property name="geometry">
+                    <rect>
+                        <x>60</x>
+                        <y>360</y>
+                        <width>230</width>
+                        <height>51</height>
+                    </rect>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>Comic Sans MS</family>
+                        <pointsize>12</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                    </font>
+                </property>
+                <property name="styleSheet">
+                    <string notr="true">color: rgb(217, 217, 217);</string>
+                </property>
+                <property name="text">
+                    <string>Приветствую в HandSight!</string>
+                </property>
+                <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                </property>
+                <property name="wordWrap">
+                    <bool>true</bool>
+                </property>
+            </widget>
+            <widget class="QLabel" name="password_label">
+                <property name="geometry">
+                    <rect>
+                        <x>30</x>
+                        <y>180</y>
+                        <width>90</width>
+                        <height>27</height>
+                    </rect>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>Comic Sans MS</family>
+                        <pointsize>14</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                    </font>
+                </property>
+                <property name="styleSheet">
+                    <string notr="true">color: rgb(255, 255, 255);</string>
+                </property>
+                <property name="text">
+                    <string>passowrd:</string>
+                </property>
+            </widget>
+            <widget class="QLabel" name="login_label">
+                <property name="geometry">
+                    <rect>
+                        <x>30</x>
+                        <y>90</y>
+                        <width>48</width>
+                        <height>27</height>
+                    </rect>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>Comic Sans MS</family>
+                        <pointsize>14</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                    </font>
+                </property>
+                <property name="styleSheet">
+                    <string notr="true">color: rgb(255, 255, 255);</string>
+                </property>
+                <property name="text">
+                    <string>login:</string>
+                </property>
+            </widget>
+            <widget class="QPushButton" name="login_button">
+                <property name="geometry">
+                    <rect>
+                        <x>80</x>
+                        <y>270</y>
+                        <width>190</width>
+                        <height>40</height>
+                    </rect>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>Comic Sans MS</family>
+                        <pointsize>14</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                    </font>
+                </property>
+                <property name="styleSheet">
+                    <string notr="true">color: rgb(62, 65, 74);
+                        background-color: rgb(217, 217, 217);
+                        border-radius: 5px;
+                    </string>
+                </property>
+                <property name="text">
+                    <string>Войти</string>
+                </property>
+            </widget>
+            <widget class="QLabel" name="auth_label">
+                <property name="geometry">
+                    <rect>
+                        <x>88</x>
+                        <y>40</y>
+                        <width>174</width>
+                        <height>39</height>
+                    </rect>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>Comic Sans MS</family>
+                        <pointsize>21</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                    </font>
+                </property>
+                <property name="styleSheet">
+                    <string notr="true">color: rgb(255, 255, 255);</string>
+                </property>
+                <property name="text">
+                    <string>Авторизация</string>
+                </property>
+            </widget>
+            <widget class="QLineEdit" name="login_line_edit">
+                <property name="geometry">
+                    <rect>
+                        <x>30</x>
+                        <y>130</y>
+                        <width>290</width>
+                        <height>35</height>
+                    </rect>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>Comic Sans MS</family>
+                        <pointsize>14</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                    </font>
+                </property>
+                <property name="styleSheet">
+                    <string notr="true">color: rgb(255, 255, 255);
+                        background-color: rgb(217, 217, 217);
+                        color: rgb(62, 65, 74);
+                        border-radius: 5px;
+                    </string>
+                </property>
+                <property name="placeholderText">
+                    <string>Enter here</string>
+                </property>
+            </widget>
+            <widget class="QPushButton" name="register_button">
+                <property name="geometry">
+                    <rect>
+                        <x>60</x>
+                        <y>320</y>
+                        <width>230</width>
+                        <height>25</height>
+                    </rect>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>Comic Sans MS</family>
+                        <pointsize>12</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                    </font>
+                </property>
+                <property name="styleSheet">
+                    <string notr="true">color: rgb(62, 65, 74);
+                        background-color: rgb(217, 217, 217);
+                        border-radius: 5px;
+                    </string>
+                </property>
+                <property name="text">
+                    <string>не зарегестрированы?</string>
+                </property>
+            </widget>
+            <widget class="QLineEdit" name="password_line_edit">
+                <property name="geometry">
+                    <rect>
+                        <x>30</x>
+                        <y>220</y>
+                        <width>290</width>
+                        <height>35</height>
+                    </rect>
+                </property>
+                <property name="font">
+                    <font>
+                        <family>Comic Sans MS</family>
+                        <pointsize>14</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                    </font>
+                </property>
+                <property name="styleSheet">
+                    <string notr="true">color: rgb(255, 255, 255);
+                        background-color: rgb(217, 217, 217);
+                        color: rgb(62, 65, 74);
+                        border-radius: 5px;
+                    </string>
+                </property>
+                <property name="echoMode">
+                    <enum>QLineEdit::Password</enum>
+                </property>
+                <property name="placeholderText">
+                    <string>Enter here</string>
+                </property>
+            </widget>
+        </widget>
+    </widget>
+    <resources/>
+    <connections/>
 </ui>

@@ -1,8 +1,8 @@
 <RCC>
-  <qresource prefix="/">
-    <file>res/main_icon.svg</file>
-    <file>res/tg_icon.svg</file>
-    <file>res/video_capture_template.svg</file>
-    <file>res/vk_icon.svg</file>
-  </qresource>
+    <qresource prefix="/">
+        <file>res/main_icon.svg</file>
+        <file>res/tg_icon.svg</file>
+        <file>res/video_capture_template.svg</file>
+        <file>res/vk_icon.svg</file>
+    </qresource>
 </RCC>
