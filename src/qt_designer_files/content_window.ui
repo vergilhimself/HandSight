@@ -1,195 +1,198 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <class>main_window</class>
-    <widget class="QMainWindow" name="main_window">
-        <property name="geometry">
-            <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>1280</width>
-                <height>720</height>
-            </rect>
-        </property>
-        <property name="windowTitle">
-            <string>HandSight - wanna see your gesture</string>
-        </property>
-        <property name="styleSheet">
-            <string notr="true">background-color: rgb(62, 65, 74);</string>
-        </property>
-        <widget class="QWidget" name="centralwidget">
-            <widget class="QLabel" name="label">
-                <property name="geometry">
-                    <rect>
-                        <x>80</x>
-                        <y>180</y>
-                        <width>220</width>
-                        <height>70</height>
-                    </rect>
-                </property>
-                <property name="font">
-                    <font>
-                        <family>Comic Sans MS</family>
-                        <pointsize>32</pointsize>
-                        <weight>75</weight>
-                        <italic>true</italic>
-                        <bold>true</bold>
-                    </font>
-                </property>
-                <property name="styleSheet">
-                    <string notr="true">color: rgb(255, 255, 255);</string>
-                </property>
-                <property name="text">
-                    <string>HandSight</string>
-                </property>
-            </widget>
-            <widget class="QLabel" name="label_2">
-                <property name="geometry">
-                    <rect>
-                        <x>100</x>
-                        <y>60</y>
-                        <width>181</width>
-                        <height>121</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string/>
-                </property>
-                <property name="pixmap">
-                    <pixmap resource="resources.qrc">:/res/main_icon.svg</pixmap>
-                </property>
-                <property name="scaledContents">
-                    <bool>true</bool>
-                </property>
-            </widget>
-            <widget class="QSplitter" name="splitter">
-                <property name="geometry">
-                    <rect>
-                        <x>140</x>
-                        <y>570</y>
-                        <width>90</width>
-                        <height>90</height>
-                    </rect>
-                </property>
-                <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="handleWidth">
-                    <number>10</number>
-                </property>
-                <widget class="QLabel" name="tg_link">
-                    <property name="text">
-                        <string/>
-                    </property>
-                    <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/res/tg_icon.svg</pixmap>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>true</bool>
-                    </property>
-                </widget>
-            </widget>
-            <widget class="QSplitter" name="actions">
-                <property name="geometry">
-                    <rect>
-                        <x>60</x>
-                        <y>260</y>
-                        <width>260</width>
-                        <height>280</height>
-                    </rect>
-                </property>
-                <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                </property>
-                <property name="handleWidth">
-                    <number>15</number>
-                </property>
-                <widget class="QPushButton" name="video_stream_button">
-                    <property name="font">
-                        <font>
-                            <family>Comic Sans MS</family>
-                            <pointsize>16</pointsize>
-                        </font>
-                    </property>
-                    <property name="styleSheet">
-                        <string notr="true">border-radius: 20px;
+ <class>main_window</class>
+ <widget class="QMainWindow" name="main_window">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>HandSight - wanna see your gesture</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(62, 65, 74);</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>180</y>
+      <width>220</width>
+      <height>70</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>32</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>HandSight</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>60</y>
+      <width>181</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="resources.qrc">:/res/main_icon.svg</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QSplitter" name="splitter">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>570</y>
+      <width>90</width>
+      <height>90</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="handleWidth">
+     <number>10</number>
+    </property>
+    <widget class="QLabel" name="tg_link">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="resources.qrc">:/res/tg_icon.svg</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QSplitter" name="actions">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>260</y>
+      <width>260</width>
+      <height>280</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+    <property name="handleWidth">
+     <number>15</number>
+    </property>
+    <widget class="QPushButton" name="video_stream_button">
+     <property name="font">
+      <font>
+       <family>Comic Sans MS</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-radius: 20px;
                             background-color: rgb(217, 217, 217);
                         </string>
-                    </property>
-                    <property name="text">
-                        <string>Трансляция</string>
-                    </property>
-                </widget>
-                <widget class="QPushButton" name="settings_button">
-                    <property name="font">
-                        <font>
-                            <family>Comic Sans MS</family>
-                            <pointsize>16</pointsize>
-                        </font>
-                    </property>
-                    <property name="styleSheet">
-                        <string notr="true">border-radius: 20px;
+     </property>
+     <property name="text">
+      <string>Трансляция</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="settings_button">
+     <property name="font">
+      <font>
+       <family>Comic Sans MS</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-radius: 20px;
                             background-color: rgb(217, 217, 217);
                         </string>
-                    </property>
-                    <property name="text">
-                        <string>Настройки</string>
-                    </property>
-                </widget>
-                <widget class="QPushButton" name="gestures_button">
-                    <property name="font">
-                        <font>
-                            <family>Comic Sans MS</family>
-                            <pointsize>16</pointsize>
-                        </font>
-                    </property>
-                    <property name="styleSheet">
-                        <string notr="true">border-radius: 20px;
+     </property>
+     <property name="text">
+      <string>Настройки</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="gestures_button">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="font">
+      <font>
+       <family>Comic Sans MS</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-radius: 20px;
                             background-color: rgb(217, 217, 217);
                         </string>
-                    </property>
-                    <property name="text">
-                        <string>Меню Жестов</string>
-                    </property>
-                </widget>
-                <widget class="QPushButton" name="exit_button">
-                    <property name="font">
-                        <font>
-                            <family>Comic Sans MS</family>
-                            <pointsize>16</pointsize>
-                        </font>
-                    </property>
-                    <property name="styleSheet">
-                        <string notr="true">border-radius: 20px;
+     </property>
+     <property name="text">
+      <string>Меню Жестов</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="exit_button">
+     <property name="font">
+      <font>
+       <family>Comic Sans MS</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-radius: 20px;
                             background-color: rgb(217, 217, 217);
                         </string>
-                    </property>
-                    <property name="text">
-                        <string>Выйти</string>
-                    </property>
-                </widget>
-            </widget>
-            <widget class="QStackedWidget" name="functions_widget">
-                <property name="geometry">
-                    <rect>
-                        <x>329</x>
-                        <y>59</y>
-                        <width>900</width>
-                        <height>600</height>
-                    </rect>
-                </property>
-                <property name="styleSheet">
-                    <string notr="true">background-color: rgb(217, 217, 217);
+     </property>
+     <property name="text">
+      <string>Выйти</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QStackedWidget" name="functions_widget">
+    <property name="geometry">
+     <rect>
+      <x>329</x>
+      <y>59</y>
+      <width>900</width>
+      <height>600</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(217, 217, 217);
                         border-radius: 20px;
                     </string>
-                </property>
-                <property name="currentIndex">
-                    <number>-1</number>
-                </property>
-            </widget>
-        </widget>
-    </widget>
-    <resources>
-        <include location="resources.qrc"/>
-    </resources>
-    <connections/>
+    </property>
+    <property name="currentIndex">
+     <number>-1</number>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
 </ui>
