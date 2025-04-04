@@ -1,32 +1,19 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QGraphicsBlurEffect, \
-    QListWidget, QListWidgetItem, QHBoxLayout, QFrame, QInputDialog, QKeySequenceEdit
+    QListWidget, QListWidgetItem, QHBoxLayout, QFrame, QInputDialog, QKeySequenceEdit, QDialog
 from PyQt5.QtGui import QKeySequence, QFont, QImage, QPixmap
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QPoint
 from qt_designer_files.gestures_widget_base import Ui_gestures_widget
 from qt_designer_files.login_widget_base import Ui_login_widget
 from qt_designer_files.video_widget_base import Ui_video_widget
 from qt_designer_files.settings_widget_base import Ui_settings_widget
 # import для db
-from funcs.db_funcs import get_user_gestures, update_keyboard_shortcut, remove_user_gesture, get_user, create_user, \
-    hash_password, add_new_custom_gesture
+from funcs.db_funcs import hash_password, get_user, create_user, get_user_gesture_bindings, save_user_gesture_binding
 import os
+import pyautogui
 import sqlite3
-import json
 from funcs.video_processor import VideoProcessor
+from funcs.command_funcs import load_standard_gestures, parse_key_sequence
 
-def load_standard_gestures():
-    try:
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(script_dir, "..", "data", "standard_gestures.json")
-        with open(file_path, "r", encoding="utf-8") as f:
-            standard_gestures = json.load(f)
-        return standard_gestures
-    except FileNotFoundError:
-        QMessageBox.critical(None, "Ошибка", "Файл standard_gestures.json не найден!")
-        return []
-    except json.JSONDecodeError:
-        QMessageBox.critical(None, "Ошибка", "Ошибка при чтении standard_gestures.json!")
-        return []
 
 class VideoWidget(QWidget, Ui_video_widget):
     def __init__(self, parent=None, video_processor=None):
@@ -114,16 +101,10 @@ class LoginWidget(QWidget, Ui_login_widget):
     def login(self):
         login = self.login_line_edit.text()
         password = self.password_line_edit.text()
-        hashed_password = hash_password(password)
-
-        if not login or not password:
-            self.error_label.setText("Заполните все поля")
-            return
-
-        user_id = get_user(self.db_path, login, hashed_password)
+        user_id = get_user(self.db_path, login, password)
         if user_id:
             self.close_login()
-            self.main_window.set_current_user(login)
+            self.main_window.set_current_user(user_id)
             QMessageBox.information(self, "Успех", f"Вы успешно вошли как {login}")
         else:
             self.error_label.setText("Неправильный логин или пароль")
@@ -131,58 +112,65 @@ class LoginWidget(QWidget, Ui_login_widget):
     def register(self):
         login = self.login_line_edit.text()
         password = self.password_line_edit.text()
-        hashed_password = hash_password(password)
-
-        if not login or not password:
-            self.error_label.setText("Заполните все поля")
-            return
-
-        if create_user(self.db_path, login, hashed_password):
-            self.close_login()
-            self.main_window.set_current_user(login)
+        if create_user(self.db_path, login, password):
             QMessageBox.information(self, "Успех", f"Пользователь {login} успешно зарегистрирован")
+            user_id = get_user(self.db_path, login, password)
+            self.main_window.set_current_user(user_id)
+            self.close_login()
         else:
             self.error_label.setText("Пользователь с таким логином уже существует")
 
 
-class GestureItemWidget(QWidget):
-    def __init__(self, gesture, parent=None):
+class KeyPressDialog(QDialog):
+    def __init__(self, parent=None):
         super().__init__(parent)
+        self.setWindowTitle("Нажмите клавишу или кнопку мыши")
+        self.layout = QVBoxLayout()
+        self.label = QLabel("Ожидание нажатия клавиши...")
+        self.layout.addWidget(self.label)
+        self.key_sequence = "" # Строка для хранения последовательности нажатий
+        self.setLayout(self.layout)
+        self.setModal(True) # Блокируем родительское окно
+        self.result = None #  Переменная для хранения результата (клавиша/кнопка)
 
-        # Основной layout
-        layout = QHBoxLayout(self)
-        layout.setContentsMargins(5, 5, 5, 5)  # Отступы
+    def keyPressEvent(self, event):
+        # Обработка нажатия клавиш
+        key = event.key()
+        modifiers = event.modifiers()
 
-        # Устанавливаем стиль для фона элемента
-        self.setStyleSheet("""
-            GestureItemWidget {
-                background-color: #3e414a;
-                border-radius: 10px; /* Закругление углов */
-                color: white; /* Белый цвет шрифта */
-            }
-        """)
-        # Имя жеста
-        self.name_label = QLabel(gesture["name"])
-        font = QFont("Comic Sans MS", 12)
-        self.name_label.setFont(font)
-        self.name_label.setStyleSheet("color: white;")
-        layout.addWidget(self.name_label)
+        key_text = ""
 
-        # Создаем QLineEdit для редактирования имени жеста
-        self.edit_name_line = QLineEdit()
-        self.edit_name_line.setText(gesture["name"])
+        if modifiers & Qt.ControlModifier:
+            key_text += "Ctrl+"
+        if modifiers & Qt.ShiftModifier:
+            key_text += "Shift+"
+        if modifiers & Qt.AltModifier:
+            key_text += "Alt+"
 
-        # Добавляем QKeySequenceEdit
-        self.key_sequence_edit = QKeySequenceEdit()
-        layout.addWidget(self.key_sequence_edit)
+        key_text += event.text() if event.text() else Qt.Key(key).name # Получаем имя клавиши
 
-        # Добавляем кнопку "Удалить"
-        self.delete_button = QPushButton("Удалить")
-        layout.addWidget(self.delete_button)
+        self.result = key_text
+        self.accept() # Закрываем диалог и возвращаем результат
 
-        # Добавляем виджеты в layout
-        layout.addWidget(self.name_label)
+    def mousePressEvent(self, event):
+        # Обработка нажатий мыши
+        button = event.button()
+        button_text = ""
+        if button == Qt.LeftButton:
+            button_text = "Левая кнопка мыши"
+        elif button == Qt.RightButton:
+            button_text = "Правая кнопка мыши"
+        elif button == Qt.MiddleButton:
+            button_text = "Средняя кнопка мыши"
+        else:
+            button_text = "Другая кнопка мыши"
 
+        self.result = button_text
+        self.accept()  # Закрываем диалог и возвращаем результат
+
+
+    def get_key_sequence(self):
+        return self.result # Возвращаем строку с клавишей/кнопкой
 
 class GesturesWidget(QWidget, Ui_gestures_widget):
     def __init__(self, parent=None, current_user=None):
@@ -190,57 +178,56 @@ class GesturesWidget(QWidget, Ui_gestures_widget):
         self.setupUi(self)
         self.current_user = current_user
         self.db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "handsight.db")
-        self.user_id = self.get_user_id_from_login(self.db_path, current_user)  # Получаем user_id
+        print(f"Путь к базе данных: {self.db_path}")
+        self.user_id = self.get_user_id_from_login(self.db_path, current_user)
+        print(f"User ID: {self.user_id}")
         self.standard_gestures = load_standard_gestures()
-        self.gestures = []  # список жестов
-        self.load_gestures()  # загружаем жесты
-        self.add_gesture_button.clicked.connect(self.add_new_gesture)
-        self.update_gesture_list()  # обновляем список жестов
+        print(f"Стандартные жесты: {self.standard_gestures}")
+        self.display_gestures()
+
+        self.gesture_key_map = self.load_gesture_key_map()  # Загружаем словарь
+        print(f"Загруженные связки: {self.gesture_key_map}")
+
+        # Словарь для хранения связей жест -> клавиша/кнопка
+        self.gesture_keys = {}
+        # Подключаем сигнал itemClicked к функции для отображения диалога назначения клавиши
+        self.gesture_list.itemClicked.connect(self.show_key_press_dialog)
+
+    def load_gesture_key_map(self):
+        """Загружает и возвращает словарь привязок."""
+        return get_user_gesture_bindings(self.db_path, self.user_id)
 
     def get_user_id_from_login(self, db_path, login):
         try:
             conn = sqlite3.connect(db_path)
             cursor = conn.cursor()
-            cursor.execute("SELECT id FROM Users WHERE login = ?", (login,))
+            cursor.execute("SELECT id FROM Users WHERE id = ?", (login,))
             user = cursor.fetchone()
             conn.close()
-            return user[0] if user else None  # Возвращаем id пользователя, если найден, иначе None
+            return user[0] if user else None
         except sqlite3.Error as e:
             print(f"Ошибка при выполнении запроса get_user: {e}")
             return None
 
-    def load_gestures(self):
-        if self.user_id:
-            user_gestures = get_user_gestures(self.db_path, self.user_id)
-            self.gestures = self.standard_gestures + user_gestures
-            # self.gestures.sort(key = lambda x: x["is_standard"], reverse = True) # Сначала стандартные
+    def display_gestures(self):
+        print(f"Gestures List Widget: {self.gesture_list}")
+        if self.standard_gestures:
+            for gesture in self.standard_gestures:
+                self.gesture_list.addItem(f"{gesture['name']}")
+        else:
+            self.gesture_list.addItem("Нет доступных жестов.")
 
-    def update_gesture_list(self):
-        self.gesture_list.clear()
-        for gesture in self.gestures:
-            self.add_gesture_to_list(gesture)
+    def show_key_press_dialog(self, item):
+        gesture_name = item.text()  # Получаем текст выбранного элемента (имя жеста)
 
-    def add_gesture_to_list(self, gesture):
-        item = QListWidgetItem()
-        item_widget = GestureItemWidget(gesture)  # Use the custom widget
+        dialog = KeyPressDialog(self) # Создаем диалог
+        result = dialog.exec_() # Открываем диалог
 
-        # Set size hint and add widget to item
-        item.setSizeHint(item_widget.sizeHint())
-        self.gesture_list.addItem(item)
-        self.gesture_list.setItemWidget(item, item_widget)
-
-    def delete_gesture(self, gesture):
-        # todo реализовать удаление
-        pass
-
-    def change_name_gesture(self, gesture):
-        # todo реализовать изменение имени
-        pass
-
-    def change_bind_gesture(self, gesture):
-        # todo реализовать изменение бинда
-        pass
-
-    def add_new_gesture(self):
-        # todo реализовать добавление
-        pass
+        if result == QDialog.Accepted: # Если клавиша/кнопка нажата
+            key_sequence = dialog.get_key_sequence() # Получаем последовательность
+            self.gesture_keys[gesture_name] = key_sequence  # Сохраняем связь жест -> клавиша
+            print(f"Клавиша/кнопка '{key_sequence}' назначена для жеста '{gesture_name}'") # Отладочный вывод
+            print(f"Текущие связи: {self.gesture_keys}") # Отладочный вывод
+            save_user_gesture_binding(self.db_path, self.user_id, gesture_name, key_sequence)
+        else:
+            print("Диалог отменен")
