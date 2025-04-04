@@ -9,16 +9,16 @@ from PyQt5.QtCore import pyqtSignal, QObject, Qt
 import csv
 from collections import Counter
 from collections import deque
-from model import KeyPointClassifier
-from model import PointHistoryClassifier
-from utils import CvFpsCalc
-
+from src.model import KeyPointClassifier
+from src.model import PointHistoryClassifier
+from src.utils import CvFpsCalc
+import pyautogui  # Import pyautogui
 
 class VideoProcessor(QObject):
     frame_ready = pyqtSignal(np.ndarray)
 
     def __init__(self, device=0, width=960, height=540, use_static_image_mode=False, min_detection_confidence=0.7,
-                 min_tracking_confidence=0.5):
+                 min_tracking_confidence=0.5, gesture_key_map=None): # Добавляем gesture_key_map
         super().__init__()
         self.cap_device = device
         self.cap_width = width
@@ -47,12 +47,14 @@ class VideoProcessor(QObject):
         # Read labels
         try:
             with open('model/keypoint_classifier/keypoint_classifier_label.csv',
-                      encoding='utf-8-sig') as f:
+                      encoding='utf-8-sig') as f:  # Используем utf-8-sig
                 reader = csv.reader(f)
-                self.keypoint_classifier_labels = [row[0] for row in reader]
+                self.keypoint_classifier_labels = [row[0].strip() for row in reader]  # Удаляем BOM и пробелы
         except FileNotFoundError:
             print("Error: keypoint_classifier_label.csv not found.")
             self.keypoint_classifier_labels = []
+
+        print(f"self.keypoint_classifier_labels: {self.keypoint_classifier_labels}")  # Отладочный вывод
 
         try:
             with open(
@@ -74,6 +76,9 @@ class VideoProcessor(QObject):
 
         # Finger gesture history
         self.finger_gesture_history = deque(maxlen=self.history_length)
+
+        # Add gesture_key_map
+        self.gesture_key_map = gesture_key_map if gesture_key_map else {}  # Initialize with provided map or empty dict
 
     def start(self):
         self.running = True
@@ -111,6 +116,7 @@ class VideoProcessor(QObject):
             image.flags.writeable = True
 
             if results.multi_hand_landmarks is not None:
+
                 for hand_landmarks, handedness in zip(
                         results.multi_hand_landmarks, results.multi_handedness):
                     # Bounding box calculation
@@ -152,8 +158,8 @@ class VideoProcessor(QObject):
                     # Get gesture names
                     try:
                         hand_sign_text = self.keypoint_classifier_labels[
-                            hand_sign_id] if self.keypoint_classifier_labels and 0 <= hand_sign_id < len(
-                            self.keypoint_classifier_labels) else "Unknown"
+                            hand_sign_id].strip()  # Удаляем пробелы
+                        ##print(f"hand_sign_text в VideoProcessor: '{hand_sign_text}'")
                         finger_gesture_text = self.point_history_classifier_labels[
                             most_common_fg_id[0][
                                 0]] if self.point_history_classifier_labels and most_common_fg_id and 0 <= \
@@ -179,6 +185,9 @@ class VideoProcessor(QObject):
 
                     )
 
+                    # Emulate keypress
+                    self.emulate_keypress(hand_sign_text)  # Вызываем функцию эмуляции
+
             else:
                 self.point_history.append([0, 0])  # Append to self.point_history
 
@@ -189,7 +198,58 @@ class VideoProcessor(QObject):
             # Screen reflection
             self.frame_ready.emit(debug_image)
 
-        cap.release()
+    def emulate_keypress(self, hand_sign_text):
+        """Эмулирует нажатие клавиши, связанной с жестом (если она назначена)."""
+        print('enter data:')
+        print(f"hand_sign_text: {hand_sign_text}")
+        print(f"self.gesture_key_map: {self.gesture_key_map}")
+
+        if hand_sign_text in self.gesture_key_map:
+            binding_info = self.gesture_key_map[hand_sign_text]
+            input_type = binding_info["input_type"]
+            key_code = binding_info["key_code"]
+            key_modifier = binding_info["key_modifier"]
+
+            print(
+                f"Эмуляция действия для жеста '{hand_sign_text}': Тип={input_type}, Код={key_code}, Модификатор={key_modifier}")
+
+            try:
+                if input_type == 'keyboard':
+                    if key_modifier == 0:  # Нет модификаторов
+                        # Преобразуем key_code в символ, если это возможно
+                        try:
+                            key_name = chr(key_code)  # Преобразуем код в символ
+                            pyautogui.press(key_name)  # Для простых клавиш
+                        except ValueError:
+                            print(f"Невозможно преобразовать key_code {key_code} в символ")
+                    else:  # Есть модификаторы
+                        modifiers = []
+                        if key_modifier & Qt.ControlModifier:
+                            modifiers.append('ctrl')
+                        if key_modifier & Qt.ShiftModifier:
+                            modifiers.append('shift')
+                        if key_modifier & Qt.AltModifier:
+                            modifiers.append('alt')
+
+                        try:
+                            key_name = chr(key_code)
+                            pyautogui.hotkey(*(modifiers + [key_name]))
+                        except ValueError:
+                            print(f"Невозможно преобразовать key_code {key_code} в символ для hotkey")
+
+
+                elif input_type == 'mouse':
+                    if key_code == Qt.LeftButton:
+                        pyautogui.click()
+                    elif key_code == Qt.RightButton:
+                        pyautogui.click(button='right')
+                    elif key_code == Qt.MiddleButton:
+                        pyautogui.click(button='middle')
+
+            except Exception as e:
+                print(f"Ошибка при эмуляции нажатия клавиши: {e}")
+        else:
+            print(f"Для жеста '{hand_sign_text}' не назначено действие.")
 
     def calc_bounding_rect(self, image, landmarks):
         image_width, image_height = image.shape[1], image.shape[0]
@@ -483,13 +543,16 @@ class VideoProcessor(QObject):
         return image
 
     def draw_info_text(self, image, brect, handedness, hand_sign_text,
-                       finger_gesture_text):
+                       finger_gesture_text, key_to_press=""): # Добавляем key_to_press
         cv.rectangle(image, (brect[0], brect[1]), (brect[2], brect[1] - 22),
                      (0, 0, 0), -1)
 
         info_text = handedness.classification[0].label[0:]
         if hand_sign_text != "":
             info_text = info_text + ':' + hand_sign_text
+        if key_to_press:  # Отображаем назначенную клавишу
+            info_text = info_text + f" (Клавиша: {key_to_press})"
+
         cv.putText(image, info_text, (brect[0] + 5, brect[1] - 4),
                    cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1,
                    cv.LINE_AA)
@@ -519,7 +582,7 @@ class VideoProcessor(QObject):
         return image
 
 
+
 if __name__ == '__main__':
-    # Example usage
     processor = VideoProcessor()
     processor.start()

@@ -12,6 +12,16 @@ class NavigationManager:
         self.current_user = current_user
 
     def show_video_widget(self):
+        # Get the updated gesture key map
+        gesture_key_map = self.main_window.get_current_gesture_key_map()  # Get from MainWindow
+        print(f"Переход в виджет трансляции, получен gesture_key_map: {gesture_key_map}")
+
+        # Stop the existing video stream if it's running
+        self.main_window.stop_video_stream()
+
+        # Start a new video stream with the updated gesture key map
+        self.main_window.start_video_stream(gesture_key_map)
+
         self.main_window.ui.functions_widget.setCurrentWidget(self.main_window.video_widget)
 
     def show_settings_widget(self):
