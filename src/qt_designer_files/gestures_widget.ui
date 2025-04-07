@@ -19,10 +19,10 @@
   <widget class="QListWidget" name="gesture_list">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>671</width>
-     <height>600</height>
+     <x>10</x>
+     <y>20</y>
+     <width>491</width>
+     <height>561</height>
     </rect>
    </property>
    <property name="font">
@@ -34,61 +34,151 @@
     </font>
    </property>
   </widget>
-  <widget class="QPushButton" name="add_gesture_command_button">
+  <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>680</x>
+     <x>520</x>
      <y>30</y>
-     <width>211</width>
-     <height>38</height>
+     <width>371</width>
+     <height>91</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Comic Sans MS</family>
-     <pointsize>16</pointsize>
+     <pointsize>11</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgb(62, 65, 74);
-                    color: rgb(255, 255, 255);
-                    border-radius: 5px;
-                </string>
-   </property>
    <property name="text">
-    <string>Добавить команду</string>
+    <string>В данном окне вы можете привязать жест к дейсвтию на клавиатуре:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="delete_gesture_command_button">
+  <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>680</x>
-     <y>90</y>
-     <width>211</width>
-     <height>38</height>
+     <x>520</x>
+     <y>160</y>
+     <width>371</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Comic Sans MS</family>
-     <pointsize>16</pointsize>
+     <pointsize>11</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgb(62, 65, 74);
-                    color: rgb(255, 255, 255);
-                    border-radius: 5px;
-                </string>
+   <property name="text">
+    <string>1. Нажмите на требуемый жест</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>200</y>
+     <width>371</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>11</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
    </property>
    <property name="text">
-    <string>Удалить команду</string>
+    <string>2. Наведитесь мышью на диалоговое окно</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>250</y>
+     <width>361</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>11</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>3. Нажмите на клавишу или кнопку мыши</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>400</y>
+     <width>381</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="resources.qrc">:/res/ASL_Alphabet_A_N.jpg</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>340</y>
+     <width>371</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>11</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Жесты используются из букв алфавита A-N из ASL</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
