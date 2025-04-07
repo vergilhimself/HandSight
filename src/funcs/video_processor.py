@@ -185,8 +185,8 @@ class VideoProcessor(QObject):
 
                     )
 
-                    # Emulate keypress
-                    self.emulate_keypress(hand_sign_text)  # Вызываем функцию эмуляции
+                    # Emulate keypress                   
+                    self.emulate_keypress(hand_sign_text)
 
             else:
                 self.point_history.append([0, 0])  # Append to self.point_history

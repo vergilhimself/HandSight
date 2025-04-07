@@ -88,6 +88,10 @@ class MainWindow(QMainWindow):
             self.video_widget.video_label.setPixmap(
                 pixmap.scaled(self.video_widget.video_label.size(), Qt.KeepAspectRatio))
 
+    def is_video_widget_active(self):
+        """Checks if the video widget is the current widget."""
+        return self.ui.functions_widget.currentWidget() == self.video_widget
+
     def closeEvent(self, event):
         self.stop_video_stream()
         super().closeEvent(event)
