@@ -28,7 +28,7 @@
     </property>
     <property name="font">
      <font>
-      <family>Comic Sans MS</family>
+      <family>Arial</family>
       <pointsize>32</pointsize>
       <weight>75</weight>
       <italic>true</italic>
