@@ -66,7 +66,9 @@ class SettingsWidget(QWidget, Ui_settings_widget):
             self.use_brect_checkbox.setChecked(self.video_processor.use_brect)
 
     def save_settings(self):
-        if self.video_processor:
+        if self.video_processor is not None:  # Если есть текущий VideoProcessor
+            print(
+                f"SettingsWidget.save_settings: Применение настроек к текущему VideoProcessor (ID: {id(self.video_processor)})")
             self.video_processor.cap_device = self.device_spinbox.value()
             self.video_processor.cap_width = self.width_spinbox.value()
             self.video_processor.cap_height = self.height_spinbox.value()
@@ -75,8 +77,23 @@ class SettingsWidget(QWidget, Ui_settings_widget):
             self.video_processor.min_tracking_confidence = self.min_tracking_confidence_doublespinbox.value()
             self.video_processor.use_brect = self.use_brect_checkbox.isChecked()
 
-            self.video_processor.stop()
-            self.video_processor.start()
+            print(
+                f"SettingsWidget: Параметры обновлены для текущего VP. MinDetectConf: {self.video_processor.min_detection_confidence}")
+
+            if self.video_processor.running:  # Если поток запущен, перезапускаем его для применения
+                print("SettingsWidget: Текущий поток запущен, перезапускаем его для применения настроек...")
+                self.video_processor.stop()
+                # start() вызовет _run, который использует обновленные атрибуты
+                try:
+                    self.video_processor.start()
+
+                except Exception as e:
+                    print()("Ошибка", f"Не удалось перезапустить видеопоток: {e}")
+            else:
+                print("Настройки обновлены",
+                                        "Настройки обновлены. Они применятся при следующем запуске трансляции.")
+        else:
+            print("SettingsWidget: video_processor не установлен (None), настройки не применены к потоку.")
 
 
 class LoginWidget(QWidget, Ui_login_widget):

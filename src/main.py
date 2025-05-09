@@ -2,7 +2,7 @@ import mediapipe as mp
 import sys
 import sqlite3
 import os  # Импортируем модуль os
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import Qt
 from gui.content_window import Ui_main_window
@@ -58,26 +58,83 @@ class MainWindow(QMainWindow):
         print(f"Загружены связывания из базы данных для пользователя {self.current_user_id}: {gesture_key_map}")
         return gesture_key_map
 
-    def start_video_stream(self, gesture_key_map):
-        """Starts the video stream with the given gesture key map."""
-        print("Запуск видеопотока...")
+    def start_video_stream(self, gesture_key_map, cap_device, cap_width, cap_height,
+                           use_static_image_mode, min_detection_confidence, min_tracking_confidence, use_brect):
+        """
+        Starts or restarts the video stream with specified parameters and gesture key map.
+        """
+        print("Запуск/перезапуск видеопотока с новыми параметрами...")
+
         if self.video_processor is not None:
-            self.stop_video_stream()  # Stop any existing stream
-        self.video_processor = VideoProcessor(gesture_key_map=gesture_key_map)
+            print(f"Остановка существующего VideoProcessor (ID: {id(self.video_processor)}) перед перезапуском.")
+            self.video_processor.stop() # Останавливаем предыдущий, если был
+            try:
+                self.video_processor.frame_ready.disconnect(self.update_frame)
+            except TypeError:
+                pass # Уже был отсоединен или не подключен
+
+        # Создаем НОВЫЙ экземпляр VideoProcessor с переданными параметрами
+        print(f"Создание нового VideoProcessor с параметрами: device={cap_device}, width={cap_width}, height={cap_height}, "
+              f"static_mode={use_static_image_mode}, min_detect_conf={min_detection_confidence}, "
+              f"min_track_conf={min_tracking_confidence}, use_brect={use_brect}")
+        self.video_processor = VideoProcessor(
+            device=cap_device,
+            width=cap_width,
+            height=cap_height,
+            use_static_image_mode=use_static_image_mode,
+            min_detection_confidence=min_detection_confidence,
+            min_tracking_confidence=min_tracking_confidence,
+            gesture_key_map=gesture_key_map
+        )
+        # self.video_processor.use_brect можно установить отдельно, если его нет в конструкторе VideoProcessor
+        # или если конструктор VideoProcessor не принимает все эти параметры, их нужно установить в атрибуты после создания.
+        # В вашем VideoProcessor конструктор принимает большинство этих параметров.
+        # Убедимся, что use_brect также устанавливается, если VideoProcessor.__init__ его не устанавливает.
+        # В вашем коде VideoProcessor.__init__ устанавливает self.use_brect = True по умолчанию,
+        # так что если вы хотите передавать его, измените VideoProcessor.__init__ или установите здесь:
+        self.video_processor.use_brect = use_brect # Устанавливаем, если нужно
+
+        # ВАЖНО: SettingsWidget теперь должен быть уведомлен о НОВОМ экземпляре video_processor
+        # чтобы его UI отображал актуальные значения (хотя при таком подходе он их и так не хранит)
+        # и чтобы он мог сохранить их в этот новый экземпляр, если бы его save_settings вызывался.
+        # Для простоты можно считать, что SettingsWidget всегда читает из video_processor.
         self.settings_widget.set_video_processor(self.video_processor)
+        # И VideoWidget тоже
+        if hasattr(self.video_widget, 'video_processor'):
+             self.video_widget.video_processor = self.video_processor
+        elif hasattr(self.video_widget, 'set_video_processor'):
+             self.video_widget.set_video_processor(self.video_processor)
+
+
         self.video_processor.frame_ready.connect(self.update_frame)
-        self.video_processor.start()
-        print(f"VideoProcessor запущен для пользователя {self.current_user_id} с gesture_key_map: {gesture_key_map}")
+        try:
+            self.video_processor.start()
+            print(f"Новый VideoProcessor (ID: {id(self.video_processor)}) запущен с gesture_key_map: {gesture_key_map}")
+        except Exception as e:
+            print(f"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print(f"ERROR starting NEW VideoProcessor: {e}")
+            import traceback
+            traceback.print_exc()
+            QMessageBox.critical(self, "Ошибка запуска", f"Не удалось запустить видеопоток: {e}")
+            print(f"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
     def stop_video_stream(self):
-        """Stops the video stream."""
         print("Остановка видеопотока...")
         if self.video_processor is not None:
+            print(f"Останавливаем VideoProcessor (ID: {id(self.video_processor)})")
             self.video_processor.stop()
-            self.video_processor.frame_ready.disconnect(self.update_frame)
-            self.video_processor = None
-            self.settings_widget.set_video_processor(None)
-            print("VideoProcessor остановлен.")
+            try:
+                self.video_processor.frame_ready.disconnect(self.update_frame)
+            except TypeError:
+                pass
+            # При таком подходе можно обнулять video_processor, так как он всегда пересоздается
+            # self.video_processor = None
+            # self.settings_widget.set_video_processor(None) # И сбрасывать в виджетах
+            # Но если мы хотим, чтобы SettingsWidget отображал последние активные настройки,
+            # то лучше не обнулять, а просто останавливать. Решите, какая семантика нужна.
+            # Пока оставим его не None для согласованности с выводом лога.
+        else:
+            print("VideoProcessor не существует (равен None) или уже остановлен.")
 
     def update_frame(self, frame):
         if self.video_processor is not None and self.ui.functions_widget.currentWidget() == self.video_widget:  # Проверяем, что video_processor создан

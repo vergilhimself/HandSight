@@ -12,16 +12,53 @@ class NavigationManager:
         self.current_user = current_user
 
     def show_video_widget(self):
-        # Get the updated gesture key map
-        gesture_key_map = self.main_window.get_current_gesture_key_map()  # Get from MainWindow
-        print(f"Переход в виджет трансляции, получен gesture_key_map: {gesture_key_map}")
+        print("NavigationManager: Переход в виджет трансляции и запуск/перезапуск потока.")
+        gesture_key_map = self.main_window.get_current_gesture_key_map()
 
-        # Stop the existing video stream if it's running
-        self.main_window.stop_video_stream()
+        # --- Получаем параметры из SettingsWidget ---
+        # Это предполагает, что self.main_window.settings_widget уже существует и инициализирован
+        # и его UI-элементы (spinbox, checkbox) доступны.
+        # Также SettingsWidget должен иметь video_processor, из которого можно было бы читать,
+        # но если мы всегда пересоздаем, то читаем прямо из UI SettingsWidget.
+        # Важно: SettingsWidget должен быть инициализирован и его UI доступен.
+        sw = self.main_window.settings_widget
+        if sw.video_processor is None: # Если VideoProcessor в SettingsWidget еще не был установлен (первый запуск)
+                                     # используем дефолтные значения или значения из UI по умолчанию.
+            print("NavigationManager: video_processor в SettingsWidget еще не установлен. Используем значения из UI SettingsWidget.")
+            cap_device = sw.device_spinbox.value()
+            cap_width = sw.width_spinbox.value()
+            cap_height = sw.height_spinbox.value()
+            use_static_image_mode = sw.use_static_image_mode_checkbox.isChecked()
+            min_detection_confidence = sw.min_detection_confidence_doublespinbox.value()
+            min_tracking_confidence = sw.min_tracking_confidence_doublespinbox.value()
+            use_brect = sw.use_brect_checkbox.isChecked()
+        else: # Читаем текущие значения из video_processor, который привязан к SettingsWidget.
+              # Это полезно, если video_processor не None и SettingsWidget отражает его состояние.
+              # Но поскольку мы всегда пересоздаем VP, можно всегда читать из UI SettingsWidget.
+              # Для простоты и консистентности с "всегда пересоздаем", читаем из UI.
+            print("NavigationManager: Чтение параметров напрямую из UI SettingsWidget.")
+            cap_device = sw.device_spinbox.value()
+            cap_width = sw.width_spinbox.value()
+            cap_height = sw.height_spinbox.value()
+            use_static_image_mode = sw.use_static_image_mode_checkbox.isChecked()
+            min_detection_confidence = sw.min_detection_confidence_doublespinbox.value()
+            min_tracking_confidence = sw.min_tracking_confidence_doublespinbox.value()
+            use_brect = sw.use_brect_checkbox.isChecked()
 
-        # Start a new video stream with the updated gesture key map
-        self.main_window.start_video_stream(gesture_key_map)
 
+        # Вызываем метод MainWindow для запуска/перезапуска потока с этими параметрами
+        self.main_window.start_video_stream(
+            gesture_key_map,
+            cap_device,
+            cap_width,
+            cap_height,
+            use_static_image_mode,
+            min_detection_confidence,
+            min_tracking_confidence,
+            use_brect
+        )
+
+        # Показываем виджет видео
         self.main_window.ui.functions_widget.setCurrentWidget(self.main_window.video_widget)
 
     def show_settings_widget(self):
