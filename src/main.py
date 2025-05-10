@@ -9,7 +9,7 @@ from gui.content_window import Ui_main_window
 from funcs.video_processor import VideoProcessor
 from gui.widgets import VideoWidget, SettingsWidget, GesturesWidget, LoginWidget
 from funcs.navigation import NavigationManager
-from src.funcs.db_funcs import get_user_gesture_bindings, create_user_gesture_bindings_table, save_user_gesture_binding
+from src.funcs.db_funcs import get_user_gesture_bindings, create_user_gesture_bindings_table
 
 class MainWindow(QMainWindow):
     def __init__(self):
