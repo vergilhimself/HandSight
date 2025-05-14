@@ -16,7 +16,7 @@ class Ui_login_widget(object):
         login_widget.setObjectName("login_widget")
         login_widget.resize(1280, 720)
         login_widget.setStyleSheet("background-color: rgba(217, 217, 217, 0.5);\n"
-"            ")
+                                   "            ")
         self.blur_widget = QtWidgets.QWidget(login_widget)
         self.blur_widget.setGeometry(QtCore.QRect(0, 0, 1280, 720))
         self.blur_widget.setStyleSheet("background-color: rgba(217, 217, 217, 0.5);")
@@ -24,10 +24,10 @@ class Ui_login_widget(object):
         self.widget = QtWidgets.QWidget(login_widget)
         self.widget.setGeometry(QtCore.QRect(440, 120, 350, 450))
         self.widget.setStyleSheet("background-color: rgb(62, 65, 74);\n"
-"                    border-color: rgb(217, 217, 217);\n"
-"                    border-width: 3px;\n"
-"                    border-radius: 15px;\n"
-"                ")
+                                  "                    border-color: rgb(217, 217, 217);\n"
+                                  "                    border-width: 3px;\n"
+                                  "                    border-radius: 15px;\n"
+                                  "                ")
         self.widget.setObjectName("widget")
         self.error_label = QtWidgets.QLabel(self.widget)
         self.error_label.setGeometry(QtCore.QRect(60, 360, 230, 51))
@@ -70,9 +70,9 @@ class Ui_login_widget(object):
         font.setWeight(75)
         self.login_button.setFont(font)
         self.login_button.setStyleSheet("color: rgb(62, 65, 74);\n"
-"                        background-color: rgb(217, 217, 217);\n"
-"                        border-radius: 5px;\n"
-"                    ")
+                                        "                        background-color: rgb(217, 217, 217);\n"
+                                        "                        border-radius: 5px;\n"
+                                        "                    ")
         self.login_button.setObjectName("login_button")
         self.auth_label = QtWidgets.QLabel(self.widget)
         self.auth_label.setGeometry(QtCore.QRect(88, 40, 174, 39))
@@ -93,10 +93,10 @@ class Ui_login_widget(object):
         font.setWeight(75)
         self.login_line_edit.setFont(font)
         self.login_line_edit.setStyleSheet("color: rgb(255, 255, 255);\n"
-"                        background-color: rgb(217, 217, 217);\n"
-"                        color: rgb(62, 65, 74);\n"
-"                        border-radius: 5px;\n"
-"                    ")
+                                           "                        background-color: rgb(217, 217, 217);\n"
+                                           "                        color: rgb(62, 65, 74);\n"
+                                           "                        border-radius: 5px;\n"
+                                           "                    ")
         self.login_line_edit.setObjectName("login_line_edit")
         self.register_button = QtWidgets.QPushButton(self.widget)
         self.register_button.setGeometry(QtCore.QRect(60, 320, 230, 25))
@@ -107,9 +107,9 @@ class Ui_login_widget(object):
         font.setWeight(75)
         self.register_button.setFont(font)
         self.register_button.setStyleSheet("color: rgb(62, 65, 74);\n"
-"                        background-color: rgb(217, 217, 217);\n"
-"                        border-radius: 5px;\n"
-"                    ")
+                                           "                        background-color: rgb(217, 217, 217);\n"
+                                           "                        border-radius: 5px;\n"
+                                           "                    ")
         self.register_button.setObjectName("register_button")
         self.password_line_edit = QtWidgets.QLineEdit(self.widget)
         self.password_line_edit.setGeometry(QtCore.QRect(30, 220, 290, 35))
@@ -120,10 +120,10 @@ class Ui_login_widget(object):
         font.setWeight(75)
         self.password_line_edit.setFont(font)
         self.password_line_edit.setStyleSheet("color: rgb(255, 255, 255);\n"
-"                        background-color: rgb(217, 217, 217);\n"
-"                        color: rgb(62, 65, 74);\n"
-"                        border-radius: 5px;\n"
-"                    ")
+                                              "                        background-color: rgb(217, 217, 217);\n"
+                                              "                        color: rgb(62, 65, 74);\n"
+                                              "                        border-radius: 5px;\n"
+                                              "                    ")
         self.password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
         self.password_line_edit.setObjectName("password_line_edit")
 

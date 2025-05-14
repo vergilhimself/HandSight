@@ -1,8 +1,11 @@
-import os
 import csv
+import os
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtGui import  QKeySequence
+
+
 def load_standard_gestures():
     try:
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -18,18 +21,13 @@ def load_standard_gestures():
         QMessageBox.critical(None, "Ошибка", f"Ошибка при чтении keypoint_classifier_label.csv: {e}!")
         return []
 
-def parse_key_sequence(sequence_str):
-    # ... (начало функции без изменений) ...
-    # print(f"--- parse_key_sequence CALLED with: '{sequence_str}' ---")
 
+def parse_key_sequence(sequence_str):
     if not sequence_str:
-        # print("parse_key_sequence: sequence_str is empty")
-        return 'keyboard', None, int(Qt.NoModifier)  # Явно приводим к int
+        return 'keyboard', None, int(Qt.NoModifier)
 
     if sequence_str == "Левая кнопка мыши":
-        # print("parse_key_sequence: Matched 'Левая кнопка мыши'")
-        return 'mouse', int(Qt.LeftButton), int(Qt.NoModifier)  # Явно приводим к int
-    # ... (остальные кнопки мыши так же) ...
+        return 'mouse', int(Qt.LeftButton), int(Qt.NoModifier)
     if sequence_str == "Правая кнопка мыши":
         return 'mouse', int(Qt.RightButton), int(Qt.NoModifier)
     if sequence_str == "Средняя кнопка мыши":
@@ -77,4 +75,3 @@ def parse_key_sequence(sequence_str):
     print(
         f"parse_key_sequence: Parsed SUCCESS: '{sequence_str}' -> key={final_key_code} (Qt.Key_0x{final_key_code:X}), modifiers={final_modifiers} (Qt.KeyboardModifier_0x{final_modifiers:X})")
     return input_type, final_key_code, final_modifiers
-

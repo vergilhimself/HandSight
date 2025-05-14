@@ -1,19 +1,19 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QGraphicsBlurEffect, \
-    QListWidget, QListWidgetItem, QHBoxLayout, QFrame, QInputDialog, QKeySequenceEdit, QDialog, QButtonGroup, \
-    QRadioButton, QButtonGroup, QHBoxLayout, QMessageBox, QSpacerItem, QSizePolicy, QComboBox
-from PyQt5.QtGui import QKeySequence, QFont, QImage, QPixmap
-from PyQt5.QtCore import Qt, QPoint
-from qt_designer_files.gestures_widget_base import Ui_gestures_widget
-from qt_designer_files.login_widget_base import Ui_login_widget
-from qt_designer_files.video_widget_base import Ui_video_widget
-from qt_designer_files.settings_widget_base import Ui_settings_widget
+import os
+import sqlite3
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QDialog, QRadioButton, QButtonGroup, QHBoxLayout, \
+    QMessageBox, QSpacerItem, QSizePolicy, QComboBox
+from funcs.command_funcs import load_standard_gestures, parse_key_sequence
 # import для db
 from funcs.db_funcs import hash_password, get_user, create_user, get_user_gesture_bindings, save_user_gesture_binding
-import os
-import pyautogui
-import sqlite3
 from funcs.video_processor import VideoProcessor
-from funcs.command_funcs import load_standard_gestures, parse_key_sequence
+from qt_designer_files.gestures_widget_base import Ui_gestures_widget
+from qt_designer_files.login_widget_base import Ui_login_widget
+from qt_designer_files.settings_widget_base import Ui_settings_widget
+from qt_designer_files.video_widget_base import Ui_video_widget
+
 
 class VideoWidget(QWidget, Ui_video_widget):
     def __init__(self, parent=None, video_processor=None):
@@ -34,6 +34,7 @@ class VideoWidget(QWidget, Ui_video_widget):
         q_image = QImage(frame.data, width, height, bytes_per_line, QImage.Format_RGB888).rgbSwapped()
         pixmap = QPixmap.fromImage(q_image)
         self.video_label.setPixmap(pixmap.scaled(self.video_label.size(), Qt.KeepAspectRatio))
+
 
 class SettingsWidget(QWidget, Ui_settings_widget):
     def __init__(self, parent=None):
@@ -65,7 +66,7 @@ class SettingsWidget(QWidget, Ui_settings_widget):
             self.use_brect_checkbox.setChecked(self.video_processor.use_brect)
 
     def save_settings(self):
-        if self.video_processor is not None:  # Если есть текущий VideoProcessor
+        if self.video_processor is not None:
             print(
                 f"SettingsWidget.save_settings: Применение настроек к текущему VideoProcessor (ID: {id(self.video_processor)})")
             self.video_processor.cap_device = self.device_spinbox.value()
@@ -77,12 +78,13 @@ class SettingsWidget(QWidget, Ui_settings_widget):
             self.video_processor.use_brect = self.use_brect_checkbox.isChecked()
 
             print(
-                f"SettingsWidget: Параметры обновлены для текущего VP. MinDetectConf: {self.video_processor.min_detection_confidence}")
+                f'SettingsWidget: Параметры обновлены для текущего VP. MinDetectConf: {self.video_processor
+                                                                                    .min_detection_confidence}')
 
-            if self.video_processor.running:  # Если поток запущен, перезапускаем его для применения
+            if self.video_processor.running:
                 print("SettingsWidget: Текущий поток запущен, перезапускаем его для применения настроек...")
                 self.video_processor.stop()
-                # start() вызовет _run, который использует обновленные атрибуты
+
                 try:
                     self.video_processor.start()
 
@@ -90,16 +92,17 @@ class SettingsWidget(QWidget, Ui_settings_widget):
                     print()("Ошибка", f"Не удалось перезапустить видеопоток: {e}")
             else:
                 print("Настройки обновлены",
-                                        "Настройки обновлены. Они применятся при следующем запуске трансляции.")
+                      "Настройки обновлены. Они применятся при следующем запуске трансляции.")
         else:
             print("SettingsWidget: video_processor не установлен (None), настройки не применены к потоку.")
+
 
 class LoginWidget(QWidget, Ui_login_widget):
     def __init__(self, parent=None, main_window=None):
         super().__init__(parent)
         self.setupUi(self)
         self.main_window = main_window
-        # Использование относительного пути
+
         self.db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "handsight.db")
         self.login_button.clicked.connect(self.login)
         self.register_button.clicked.connect(self.register)
@@ -135,6 +138,7 @@ class LoginWidget(QWidget, Ui_login_widget):
         else:
             self.error_label.setText("Пользователь с таким логином уже существует")
 
+
 class GesturesWidget(QWidget, Ui_gestures_widget):
     def __init__(self, parent=None, current_user=None):
         super().__init__(parent)
@@ -148,7 +152,7 @@ class GesturesWidget(QWidget, Ui_gestures_widget):
         print(f"Стандартные жесты: {self.standard_gestures}")
         self.display_gestures()
 
-        self.gesture_key_map = self.load_gesture_key_map()  # Загружаем словарь
+        self.gesture_key_map = self.load_gesture_key_map()
         print(f"Загруженные связки: {self.gesture_key_map}")
 
         # Словарь для хранения связей жест -> клавиша/кнопка
@@ -189,7 +193,7 @@ class GesturesWidget(QWidget, Ui_gestures_widget):
 
             gesture_name = item.text()
             print(f"Attempting to show dialog for gesture: '{gesture_name}'")
-            print(f"Current user_id: {self.user_id}") # Убедимся, что user_id есть
+            print(f"Current user_id: {self.user_id}")
 
             if self.user_id is None:
                 print("ERROR: self.user_id is None. Cannot proceed.")
@@ -197,7 +201,7 @@ class GesturesWidget(QWidget, Ui_gestures_widget):
                 return
 
             print("Creating AssignBindingDialog...")
-            dialog = AssignBindingDialog(gesture_name, self) # self - это GesturesWidget
+            dialog = AssignBindingDialog(gesture_name, self)
             print(f"AssignBindingDialog created. Parent: {dialog.parent()}")
 
             print("Executing dialog.exec_()...")
@@ -218,7 +222,8 @@ class GesturesWidget(QWidget, Ui_gestures_widget):
                         gesture_name=gesture_name,
                         key_sequence=key_sequence_str_for_db
                     )
-                    print("GesturesWidget: Привязка сохранена. Изменения вступят в силу при следующем запуске/перезапуске трансляции.")
+                    print(
+                        "GesturesWidget: Привязка сохранена. Изменения вступят в силу при следующем запуске/перезапуске трансляции.")
                     QMessageBox.information(self, "Привязка сохранена",
                                             "Новая привязка жеста сохранена.\n"
                                             "Она будет активна при следующем запуске трансляции.")
@@ -226,16 +231,13 @@ class GesturesWidget(QWidget, Ui_gestures_widget):
                     print(f"Диалог для жеста '{gesture_name}' принят, но строка для БД пустая.")
             else:
                 print(f"Диалог назначения для жеста '{gesture_name}' отменен или закрыт.")
-            print("--- GesturesWidget.show_key_press_dialog FINISHED ---")
 
         except Exception as e:
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             print(f"CRITICAL ERROR in GesturesWidget.show_key_press_dialog: {e}")
             import traceback
             traceback.print_exc()
             QMessageBox.critical(self, "Критическая ошибка",
                                  f"Произошла ошибка при открытии диалога назначения: {e}")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 
 class AssignBindingDialog(QDialog):
@@ -308,8 +310,7 @@ class AssignBindingDialog(QDialog):
         self.toggle_sections()
 
         self.setModal(True)
-        # self.result_binding_info = None # Не используется напрямую в этой версии
-        self.result_key_sequence_for_db = None  # Строка, которую ожидает save_user_gesture_binding
+        self.result_key_sequence_for_db = None
 
     def toggle_sections(self):
         is_keyboard = self.keyboard_radio.isChecked()
@@ -333,7 +334,7 @@ class AssignBindingDialog(QDialog):
                 if modifier_data & Qt.ControlModifier: text_parts.append("Ctrl")
                 if modifier_data & Qt.ShiftModifier: text_parts.append("Shift")
                 if modifier_data & Qt.AltModifier: text_parts.append("Alt")
-            text_parts.append(self.key_combo.currentText())  # Используем текст из комбобокса для основной клавиши
+            text_parts.append(self.key_combo.currentText())
 
             self.result_key_sequence_for_db = " + ".join(text_parts)
             print(f"AssignBindingDialog: Keyboard selected. Result for DB: '{self.result_key_sequence_for_db}'")
@@ -345,7 +346,7 @@ class AssignBindingDialog(QDialog):
             QMessageBox.warning(self, "Ошибка", "Не выбран тип действия (клавиатура или мышь).")
             return
         print(
-            f"AssignBindingDialog: Keyboard selected. Result for DB: '{self.result_key_sequence_for_db}'")  # Ожидаем "Ctrl+B"
+            f"AssignBindingDialog: Keyboard selected. Result for DB: '{self.result_key_sequence_for_db}'")
         super().accept()
 
     def get_key_sequence_for_db(self):

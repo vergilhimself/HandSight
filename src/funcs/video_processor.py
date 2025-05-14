@@ -1,24 +1,25 @@
 import copy
-from __main__ import mp
-import argparse
+import csv
 import itertools
 import threading
-import cv2 as cv
-import numpy as np
-from PyQt5.QtCore import pyqtSignal, QObject, Qt
-import csv
+import mediapipe as mp
 from collections import Counter
 from collections import deque
+
+import cv2 as cv
+import numpy as np
+import pyautogui
+from PyQt5.QtCore import pyqtSignal, QObject, Qt
+
 from src.model import KeyPointClassifier
 from src.model import PointHistoryClassifier
 from src.utils import CvFpsCalc
-import pyautogui  # Import pyautogui
 
 class VideoProcessor(QObject):
     frame_ready = pyqtSignal(np.ndarray)
 
     def __init__(self, device=0, width=960, height=540, use_static_image_mode=False, min_detection_confidence=0.7,
-                 min_tracking_confidence=0.5, gesture_key_map=None): # Добавляем gesture_key_map
+                 min_tracking_confidence=0.5, gesture_key_map=None):
         super().__init__()
         self.cap_device = device
         self.cap_width = width
@@ -67,18 +68,14 @@ class VideoProcessor(QObject):
             print("Error: point_history_classifier_label.csv not found.")
             self.point_history_classifier_labels = []
 
-        # FPS Measurement
         self.cvFpsCalc = CvFpsCalc(buffer_len=10)
 
-        # Coordinate history
         self.history_length = 16
         self.point_history = deque(maxlen=self.history_length)
 
-        # Finger gesture history
         self.finger_gesture_history = deque(maxlen=self.history_length)
 
-        # Add gesture_key_map
-        self.gesture_key_map = gesture_key_map if gesture_key_map else {}  # Initialize with provided map or empty dict
+        self.gesture_key_map = gesture_key_map if gesture_key_map else {}
 
     def start(self):
         self.running = True
@@ -98,9 +95,6 @@ class VideoProcessor(QObject):
         while self.running:
             self.fps = self.cvFpsCalc.get()
 
-            # Process Key (ESC: end)
-            key = cv.waitKey(10)
-
             # Camera capture
             ret, image = cap.read()
             if not ret:
@@ -108,7 +102,6 @@ class VideoProcessor(QObject):
             image = cv.flip(image, 1)  # Mirror display
             debug_image = copy.deepcopy(image)
 
-            # Detection implementation
             image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
             image.flags.writeable = False
@@ -137,7 +130,7 @@ class VideoProcessor(QObject):
                     # Hand sign classification
                     hand_sign_id = self.keypoint_classifier(
                         pre_processed_landmark_list)
-                    if hand_sign_id == 2:  # Point gesture
+                    if hand_sign_id == "point_history_class":  # Point gesture
                         self.point_history.append(landmark_list[8])  # Append to self.point_history
                     else:
                         self.point_history.append([0, 0])  # Append to self.point_history
@@ -151,15 +144,14 @@ class VideoProcessor(QObject):
                             pre_processed_point_history_list)
 
                     # Calculates the gesture IDs in the latest detection
-                    self.finger_gesture_history.append(finger_gesture_id)  # Append to self.finger_gesture_history
+                    self.finger_gesture_history.append(finger_gesture_id)
                     most_common_fg_id = Counter(
                         self.finger_gesture_history).most_common()
 
                     # Get gesture names
                     try:
                         hand_sign_text = self.keypoint_classifier_labels[
-                            hand_sign_id].strip()  # Удаляем пробелы
-                        ##print(f"hand_sign_text в VideoProcessor: '{hand_sign_text}'")
+                            hand_sign_id].strip()
                         finger_gesture_text = self.point_history_classifier_labels[
                             most_common_fg_id[0][
                                 0]] if self.point_history_classifier_labels and most_common_fg_id and 0 <= \
@@ -189,17 +181,15 @@ class VideoProcessor(QObject):
                     self.emulate_keypress(hand_sign_text)
 
             else:
-                self.point_history.append([0, 0])  # Append to self.point_history
+                self.point_history.append([0, 0])
 
-            debug_image = self.draw_point_history(debug_image,
-                                                  self.point_history)  # Use self.point_history
+            debug_image = self.draw_point_history(debug_image, self.point_history)
             debug_image = self.draw_info(debug_image, self.fps)
 
             # Screen reflection
             self.frame_ready.emit(debug_image)
 
     def emulate_keypress(self, hand_sign_text):
-        """Эмулирует нажатие клавиши, связанной с жестом (если она назначена)."""
         print('enter data:')
         print(f"hand_sign_text: {hand_sign_text}")
         print(f"self.gesture_key_map: {self.gesture_key_map}")
@@ -215,14 +205,13 @@ class VideoProcessor(QObject):
 
             try:
                 if input_type == 'keyboard':
-                    if key_modifier == 0:  # Нет модификаторов
-                        # Преобразуем key_code в символ, если это возможно
+                    if key_modifier == 0:
                         try:
-                            key_name = chr(key_code)  # Преобразуем код в символ
-                            pyautogui.press(key_name)  # Для простых клавиш
+                            key_name = chr(key_code)
+                            pyautogui.press(key_name)
                         except ValueError:
                             print(f"Невозможно преобразовать key_code {key_code} в символ")
-                    else:  # Есть модификаторы
+                    else:
                         modifiers = []
                         if key_modifier & Qt.ControlModifier:
                             modifiers.append('ctrl')
@@ -278,7 +267,6 @@ class VideoProcessor(QObject):
         for _, landmark in enumerate(landmarks.landmark):
             landmark_x = min(int(landmark.x * image_width), image_width - 1)
             landmark_y = min(int(landmark.y * image_height), image_height - 1)
-            # landmark_z = landmark.z
 
             landmark_point.append([landmark_x, landmark_y])
 
@@ -287,7 +275,6 @@ class VideoProcessor(QObject):
     def pre_process_landmark(self, landmark_list):
         temp_landmark_list = copy.deepcopy(landmark_list)
 
-        # Convert to relative coordinates
         base_x, base_y = 0, 0
         for index, landmark_point in enumerate(temp_landmark_list):
             if index == 0:
@@ -296,11 +283,9 @@ class VideoProcessor(QObject):
             temp_landmark_list[index][0] = temp_landmark_list[index][0] - base_x
             temp_landmark_list[index][1] = temp_landmark_list[index][1] - base_y
 
-        # Convert to a one-dimensional list
         temp_landmark_list = list(
             itertools.chain.from_iterable(temp_landmark_list))
 
-        # Normalization
         max_value = max(list(map(abs, temp_landmark_list)))
 
         def normalize_(n):
@@ -315,7 +300,6 @@ class VideoProcessor(QObject):
 
         temp_point_history = copy.deepcopy(point_history)
 
-        # Convert to relative coordinates
         base_x, base_y = 0, 0
         for index, point in enumerate(temp_point_history):
             if index == 0:
@@ -326,7 +310,6 @@ class VideoProcessor(QObject):
             temp_point_history[index][1] = (temp_point_history[index][1] -
                                             base_y) / image_height
 
-        # Convert to a one-dimensional list
         temp_point_history = list(
             itertools.chain.from_iterable(temp_point_history))
 
@@ -543,14 +526,14 @@ class VideoProcessor(QObject):
         return image
 
     def draw_info_text(self, image, brect, handedness, hand_sign_text,
-                       finger_gesture_text, key_to_press=""): # Добавляем key_to_press
+                       finger_gesture_text, key_to_press=""):
         cv.rectangle(image, (brect[0], brect[1]), (brect[2], brect[1] - 22),
                      (0, 0, 0), -1)
 
         info_text = handedness.classification[0].label[0:]
         if hand_sign_text != "":
             info_text = info_text + ':' + hand_sign_text
-        if key_to_press:  # Отображаем назначенную клавишу
+        if key_to_press:
             info_text = info_text + f" (Клавиша: {key_to_press})"
 
         cv.putText(image, info_text, (brect[0] + 5, brect[1] - 4),
@@ -570,7 +553,6 @@ class VideoProcessor(QObject):
             if point[0] != 0 and point[1] != 0:
                 cv.circle(image, (point[0], point[1]), 1 + int(index / 2),
                           (152, 251, 152), 2)
-
         return image
 
     def draw_info(self, image, fps):
@@ -578,9 +560,7 @@ class VideoProcessor(QObject):
                    1.0, (0, 0, 0), 4, cv.LINE_AA)
         cv.putText(image, "FPS:" + str(fps), (10, 30), cv.FONT_HERSHEY_SIMPLEX,
                    1.0, (255, 255, 255), 2, cv.LINE_AA)
-
         return image
-
 
 
 if __name__ == '__main__':

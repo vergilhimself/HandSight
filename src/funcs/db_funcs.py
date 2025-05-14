@@ -1,8 +1,9 @@
-import sqlite3
 import hashlib
-import json
-import os
+import sqlite3
+
 from src.funcs.command_funcs import parse_key_sequence
+
+
 def hash_password(password):
     """Хеширует пароль с использованием SHA256."""
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
@@ -40,7 +41,7 @@ def create_user(db_path, login, password):
         if existing_user:
             conn.close()
             return False  # Пользователь существует
-        hashed_password = hash_password(password) # Хешируем пароль перед сохранением
+        hashed_password = hash_password(password)  # Хешируем пароль перед сохранением
         cursor.execute("INSERT INTO Users (login, password) VALUES (?, ?)", (login, hashed_password))
         conn.commit()
         conn.close()
@@ -48,6 +49,7 @@ def create_user(db_path, login, password):
     except sqlite3.Error as e:
         print(f"Ошибка при выполнении запроса create_user: {e}")
         return False
+
 
 def save_user_gesture_binding(db_path, user_id, gesture_name, key_sequence):
     """
@@ -58,7 +60,8 @@ def save_user_gesture_binding(db_path, user_id, gesture_name, key_sequence):
         gesture_name: Имя жеста (например, "ID: Pointer, Name: Pointer").
         key_sequence: Строка, представляющая клавишу или кнопку мыши (например, "Левая кнопка мыши", "1", "Ctrl+C").
     """
-    print(f"Сохранение: user_id={user_id}, gesture_name={gesture_name}, key_sequence={key_sequence}") # Отладочный вывод
+    print(
+        f"Сохранение: user_id={user_id}, gesture_name={gesture_name}, key_sequence={key_sequence}")  # Отладочный вывод
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
@@ -75,7 +78,7 @@ def save_user_gesture_binding(db_path, user_id, gesture_name, key_sequence):
         cursor.execute("""
             INSERT INTO UserGestureBindings (user_id, gesture_id, input_type, key_code, key_modifier)
             VALUES (?, ?, ?, ?, ?)
-        """, (user_id, gesture_name, input_type, key_code, key_modifier)) # Используем gesture_name вместо gesture_id
+        """, (user_id, gesture_name, input_type, key_code, key_modifier))  # Используем gesture_name вместо gesture_id
         print(f"Вставлено записей: {cursor.rowcount}")  # Проверяем сколько записей было вставлено
 
         conn.commit()
@@ -84,13 +87,16 @@ def save_user_gesture_binding(db_path, user_id, gesture_name, key_sequence):
     except sqlite3.Error as e:
         print(f"Ошибка при сохранении привязки жеста: {e}")
 
+
 def get_user_gesture_bindings(db_path, user_id):
     """Loads gesture bindings for a user from the database."""
     gesture_key_map = {}
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        cursor.execute("SELECT gesture_id, input_type, key_code, key_modifier FROM UserGestureBindings WHERE user_id = ?", (user_id,))
+        cursor.execute(
+            "SELECT gesture_id, input_type, key_code, key_modifier FROM UserGestureBindings WHERE user_id = ?",
+            (user_id,))
         rows = cursor.fetchall()
         for row in rows:
             gesture_id, input_type, key_code, key_modifier = row
@@ -106,6 +112,7 @@ def get_user_gesture_bindings(db_path, user_id):
     except sqlite3.Error as e:
         print(f"Ошибка при загрузке связываний жестов: {e}")
     return gesture_key_map
+
 
 def create_user_gesture_bindings_table(db_path):
     """Создает таблицу UserGestureBindings, если ее не существует."""
@@ -126,6 +133,7 @@ def create_user_gesture_bindings_table(db_path):
         conn.close()
     except sqlite3.Error as e:
         print(f"Ошибка при создании таблицы UserGestureBindings: {e}")
+
 
 if __name__ == '__main__':
     db_path = "handsight.db"

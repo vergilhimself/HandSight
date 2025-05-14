@@ -1,7 +1,3 @@
-import sys
-from PyQt5.QtWidgets import QApplication
-
-
 class NavigationManager:
     def __init__(self, main_window):
         self.main_window = main_window
@@ -22,9 +18,10 @@ class NavigationManager:
         # но если мы всегда пересоздаем, то читаем прямо из UI SettingsWidget.
         # Важно: SettingsWidget должен быть инициализирован и его UI доступен.
         sw = self.main_window.settings_widget
-        if sw.video_processor is None: # Если VideoProcessor в SettingsWidget еще не был установлен (первый запуск)
-                                     # используем дефолтные значения или значения из UI по умолчанию.
-            print("NavigationManager: video_processor в SettingsWidget еще не установлен. Используем значения из UI SettingsWidget.")
+        if sw.video_processor is None:  # Если VideoProcessor в SettingsWidget еще не был установлен (первый запуск)
+            # используем дефолтные значения или значения из UI по умолчанию.
+            print(
+                "NavigationManager: video_processor в SettingsWidget еще не установлен. Используем значения из UI SettingsWidget.")
             cap_device = sw.device_spinbox.value()
             cap_width = sw.width_spinbox.value()
             cap_height = sw.height_spinbox.value()
@@ -32,10 +29,10 @@ class NavigationManager:
             min_detection_confidence = sw.min_detection_confidence_doublespinbox.value()
             min_tracking_confidence = sw.min_tracking_confidence_doublespinbox.value()
             use_brect = sw.use_brect_checkbox.isChecked()
-        else: # Читаем текущие значения из video_processor, который привязан к SettingsWidget.
-              # Это полезно, если video_processor не None и SettingsWidget отражает его состояние.
-              # Но поскольку мы всегда пересоздаем VP, можно всегда читать из UI SettingsWidget.
-              # Для простоты и консистентности с "всегда пересоздаем", читаем из UI.
+        else:  # Читаем текущие значения из video_processor, который привязан к SettingsWidget.
+            # Это полезно, если video_processor не None и SettingsWidget отражает его состояние.
+            # Но поскольку мы всегда пересоздаем VP, можно всегда читать из UI SettingsWidget.
+            # Для простоты и консистентности с "всегда пересоздаем", читаем из UI.
             print("NavigationManager: Чтение параметров напрямую из UI SettingsWidget.")
             cap_device = sw.device_spinbox.value()
             cap_width = sw.width_spinbox.value()
@@ -44,7 +41,6 @@ class NavigationManager:
             min_detection_confidence = sw.min_detection_confidence_doublespinbox.value()
             min_tracking_confidence = sw.min_tracking_confidence_doublespinbox.value()
             use_brect = sw.use_brect_checkbox.isChecked()
-
 
         # Вызываем метод MainWindow для запуска/перезапуска потока с этими параметрами
         self.main_window.start_video_stream(

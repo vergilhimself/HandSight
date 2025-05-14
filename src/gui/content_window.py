@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import src.gui.resources_rc
+
 
 class Ui_main_window(object):
     def setupUi(self, main_window):
@@ -56,8 +56,8 @@ class Ui_main_window(object):
         font.setPointSize(16)
         self.video_stream_button.setFont(font)
         self.video_stream_button.setStyleSheet("border-radius: 20px;\n"
-"                            background-color: rgb(217, 217, 217);\n"
-"                        ")
+                                               "                            background-color: rgb(217, 217, 217);\n"
+                                               "                        ")
         self.video_stream_button.setObjectName("video_stream_button")
         self.settings_button = QtWidgets.QPushButton(self.actions)
         font = QtGui.QFont()
@@ -65,8 +65,8 @@ class Ui_main_window(object):
         font.setPointSize(16)
         self.settings_button.setFont(font)
         self.settings_button.setStyleSheet("border-radius: 20px;\n"
-"                            background-color: rgb(217, 217, 217);\n"
-"                        ")
+                                           "                            background-color: rgb(217, 217, 217);\n"
+                                           "                        ")
         self.settings_button.setObjectName("settings_button")
         self.gestures_button = QtWidgets.QPushButton(self.actions)
         self.gestures_button.setEnabled(True)
@@ -75,8 +75,8 @@ class Ui_main_window(object):
         font.setPointSize(16)
         self.gestures_button.setFont(font)
         self.gestures_button.setStyleSheet("border-radius: 20px;\n"
-"                            background-color: rgb(217, 217, 217);\n"
-"                        ")
+                                           "                            background-color: rgb(217, 217, 217);\n"
+                                           "                        ")
         self.gestures_button.setObjectName("gestures_button")
         self.exit_button = QtWidgets.QPushButton(self.actions)
         font = QtGui.QFont()
@@ -84,14 +84,14 @@ class Ui_main_window(object):
         font.setPointSize(16)
         self.exit_button.setFont(font)
         self.exit_button.setStyleSheet("border-radius: 20px;\n"
-"                            background-color: rgb(217, 217, 217);\n"
-"                        ")
+                                       "                            background-color: rgb(217, 217, 217);\n"
+                                       "                        ")
         self.exit_button.setObjectName("exit_button")
         self.functions_widget = QtWidgets.QStackedWidget(self.centralwidget)
         self.functions_widget.setGeometry(QtCore.QRect(329, 59, 900, 600))
         self.functions_widget.setStyleSheet("background-color: rgb(217, 217, 217);\n"
-"                        border-radius: 20px;\n"
-"                    ")
+                                            "                        border-radius: 20px;\n"
+                                            "                    ")
         self.functions_widget.setObjectName("functions_widget")
         main_window.setCentralWidget(self.centralwidget)
 
@@ -107,4 +107,3 @@ class Ui_main_window(object):
         self.settings_button.setText(_translate("main_window", "Настройки"))
         self.gestures_button.setText(_translate("main_window", "Меню Жестов"))
         self.exit_button.setText(_translate("main_window", "Выйти"))
-

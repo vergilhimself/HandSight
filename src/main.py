@@ -1,22 +1,24 @@
-import mediapipe as mp
 import sys
-import sqlite3
-import os  # Импортируем модуль os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
-from PyQt5.QtGui import QImage, QPixmap
+import os
+import sys
+import mediapipe as mp #DONT DELETE
 from PyQt5.QtCore import Qt
-from gui.content_window import Ui_main_window
-from funcs.video_processor import VideoProcessor
-from gui.widgets import VideoWidget, SettingsWidget, GesturesWidget, LoginWidget
+from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
+
 from funcs.navigation import NavigationManager
+from funcs.video_processor import VideoProcessor
+from gui.content_window import Ui_main_window
+from gui.widgets import VideoWidget, SettingsWidget, LoginWidget
 from src.funcs.db_funcs import get_user_gesture_bindings, create_user_gesture_bindings_table
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_main_window()
         self.ui.setupUi(self)
-        self.current_user_id = None  # Initialize current_user_id
+        self.current_user_id = None
 
         self.login_widget = LoginWidget(self, self)
         self.login_widget.setGeometry(0, 0, 1280, 720)
@@ -36,13 +38,12 @@ class MainWindow(QMainWindow):
 
         # Database path
         self.db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "handsight.db")
-        print(f"Database path: {self.db_path}")  # Проверяем, что путь к БД верный
-        create_user_gesture_bindings_table(self.db_path)  # Ensure table exists
+        print(f"Database path: {self.db_path}")
+        create_user_gesture_bindings_table(self.db_path)
 
-        #  DO NOT start VideoProcessor in __init__. Start it after login.
-        self.video_processor = None # Initialize to None
-        self.settings_widget.set_video_processor(None) # also set to None
-        self.login_widget.show_login()  # Show the login widget
+        self.video_processor = None
+        self.settings_widget.set_video_processor(None)
+        self.login_widget.show_login()
 
     def set_current_user(self, current_user_id):
         print(f"Установлен текущий пользователь: {current_user_id}")
@@ -50,7 +51,6 @@ class MainWindow(QMainWindow):
         self.navigation_manager.set_current_user(current_user_id)
 
     def get_current_gesture_key_map(self):
-        """Gets the current gesture key map from the database."""
         if self.current_user_id is None:
             print("Предупреждение: get_current_gesture_key_map вызван до установки current_user_id")
             return {}
@@ -60,23 +60,20 @@ class MainWindow(QMainWindow):
 
     def start_video_stream(self, gesture_key_map, cap_device, cap_width, cap_height,
                            use_static_image_mode, min_detection_confidence, min_tracking_confidence, use_brect):
-        """
-        Starts or restarts the video stream with specified parameters and gesture key map.
-        """
         print("Запуск/перезапуск видеопотока с новыми параметрами...")
 
         if self.video_processor is not None:
             print(f"Остановка существующего VideoProcessor (ID: {id(self.video_processor)}) перед перезапуском.")
-            self.video_processor.stop() # Останавливаем предыдущий, если был
+            self.video_processor.stop()
             try:
                 self.video_processor.frame_ready.disconnect(self.update_frame)
             except TypeError:
-                pass # Уже был отсоединен или не подключен
+                pass
 
-        # Создаем НОВЫЙ экземпляр VideoProcessor с переданными параметрами
-        print(f"Создание нового VideoProcessor с параметрами: device={cap_device}, width={cap_width}, height={cap_height}, "
-              f"static_mode={use_static_image_mode}, min_detect_conf={min_detection_confidence}, "
-              f"min_track_conf={min_tracking_confidence}, use_brect={use_brect}")
+        print(
+            f"Создание нового VideoProcessor с параметрами: device={cap_device}, width={cap_width}, height={cap_height}, "
+            f"static_mode={use_static_image_mode}, min_detect_conf={min_detection_confidence}, "
+            f"min_track_conf={min_tracking_confidence}, use_brect={use_brect}")
         self.video_processor = VideoProcessor(
             device=cap_device,
             width=cap_width,
@@ -86,25 +83,13 @@ class MainWindow(QMainWindow):
             min_tracking_confidence=min_tracking_confidence,
             gesture_key_map=gesture_key_map
         )
-        # self.video_processor.use_brect можно установить отдельно, если его нет в конструкторе VideoProcessor
-        # или если конструктор VideoProcessor не принимает все эти параметры, их нужно установить в атрибуты после создания.
-        # В вашем VideoProcessor конструктор принимает большинство этих параметров.
-        # Убедимся, что use_brect также устанавливается, если VideoProcessor.__init__ его не устанавливает.
-        # В вашем коде VideoProcessor.__init__ устанавливает self.use_brect = True по умолчанию,
-        # так что если вы хотите передавать его, измените VideoProcessor.__init__ или установите здесь:
-        self.video_processor.use_brect = use_brect # Устанавливаем, если нужно
-
-        # ВАЖНО: SettingsWidget теперь должен быть уведомлен о НОВОМ экземпляре video_processor
-        # чтобы его UI отображал актуальные значения (хотя при таком подходе он их и так не хранит)
-        # и чтобы он мог сохранить их в этот новый экземпляр, если бы его save_settings вызывался.
-        # Для простоты можно считать, что SettingsWidget всегда читает из video_processor.
+        self.video_processor.use_brect = use_brect
         self.settings_widget.set_video_processor(self.video_processor)
-        # И VideoWidget тоже
-        if hasattr(self.video_widget, 'video_processor'):
-             self.video_widget.video_processor = self.video_processor
-        elif hasattr(self.video_widget, 'set_video_processor'):
-             self.video_widget.set_video_processor(self.video_processor)
 
+        if hasattr(self.video_widget, 'video_processor'):
+            self.video_widget.video_processor = self.video_processor
+        elif hasattr(self.video_widget, 'set_video_processor'):
+            self.video_widget.set_video_processor(self.video_processor)
 
         self.video_processor.frame_ready.connect(self.update_frame)
         try:
@@ -127,17 +112,12 @@ class MainWindow(QMainWindow):
                 self.video_processor.frame_ready.disconnect(self.update_frame)
             except TypeError:
                 pass
-            # При таком подходе можно обнулять video_processor, так как он всегда пересоздается
-            # self.video_processor = None
-            # self.settings_widget.set_video_processor(None) # И сбрасывать в виджетах
-            # Но если мы хотим, чтобы SettingsWidget отображал последние активные настройки,
-            # то лучше не обнулять, а просто останавливать. Решите, какая семантика нужна.
-            # Пока оставим его не None для согласованности с выводом лога.
+
         else:
             print("VideoProcessor не существует (равен None) или уже остановлен.")
 
     def update_frame(self, frame):
-        if self.video_processor is not None and self.ui.functions_widget.currentWidget() == self.video_widget:  # Проверяем, что video_processor создан
+        if self.video_processor is not None and self.ui.functions_widget.currentWidget() == self.video_widget:
             height, width, channel = frame.shape
             bytes_per_line = 3 * width
             q_image = QImage(frame.data, width, height, bytes_per_line, QImage.Format_RGB888).rgbSwapped()
@@ -146,7 +126,6 @@ class MainWindow(QMainWindow):
                 pixmap.scaled(self.video_widget.video_label.size(), Qt.KeepAspectRatio))
 
     def is_video_widget_active(self):
-        """Checks if the video widget is the current widget."""
         return self.ui.functions_widget.currentWidget() == self.video_widget
 
     def closeEvent(self, event):
