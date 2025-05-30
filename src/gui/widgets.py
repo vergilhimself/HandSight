@@ -161,7 +161,6 @@ class GesturesWidget(QWidget, Ui_gestures_widget):
         self.gesture_list.itemClicked.connect(self.show_key_press_dialog)
 
     def load_gesture_key_map(self):
-        """Загружает и возвращает словарь привязок."""
         return get_user_gesture_bindings(self.db_path, self.user_id)
 
     def get_user_id_from_login(self, db_path, login):
