@@ -1,7 +1,7 @@
 import hashlib
 import sqlite3
 
-from src.funcs.command_funcs import parse_key_sequence
+from funcs.command_funcs import parse_key_sequence
 
 
 def hash_password(password):

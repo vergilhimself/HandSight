@@ -11,9 +11,9 @@ import numpy as np
 import pyautogui
 from PyQt5.QtCore import pyqtSignal, QObject, Qt
 
-from src.model import KeyPointClassifier
-from src.model import PointHistoryClassifier
-from src.utils import CvFpsCalc
+from model import KeyPointClassifier
+from model import PointHistoryClassifier
+from utils import CvFpsCalc
 
 class VideoProcessor(QObject):
     frame_ready = pyqtSignal(np.ndarray)

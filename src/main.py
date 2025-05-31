@@ -10,7 +10,7 @@ from funcs.navigation import NavigationManager
 from funcs.video_processor import VideoProcessor
 from gui.content_window import Ui_main_window
 from gui.widgets import VideoWidget, SettingsWidget, LoginWidget
-from src.funcs.db_funcs import get_user_gesture_bindings, create_user_gesture_bindings_table
+from funcs.db_funcs import get_user_gesture_bindings, create_user_gesture_bindings_table
 
 
 class MainWindow(QMainWindow):
