@@ -10,7 +10,7 @@ opencv-contrib-python
 protobuf>=4.25.3,<5
 sounddevice>=0.4.4
 sentencepiece
-
+pyautogui
 tensorflow
 mediapipe
 PyQt5
