@@ -14,6 +14,6 @@ pyautogui
 tensorflow
 mediapipe
 PyQt5
-
+msvc-runtime
 #Для выполнения впишите в командной строке
 #pip install -r requirements.txt

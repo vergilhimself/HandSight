@@ -32,7 +32,7 @@ class VideoProcessor(QObject):
         self.mode = 0
         self.number = -1
         self.fps = 0
-
+        self.previous_gesture = None
         # Model and Label loading
         self.mp_hands = mp.solutions.hands
         self.hands = self.mp_hands.Hands(
@@ -178,11 +178,13 @@ class VideoProcessor(QObject):
                     )
 
                     # Emulate keypress                   
-                    self.emulate_keypress(hand_sign_text)
+                    if hand_sign_text != self.previous_gesture:
+                        self.emulate_keypress(hand_sign_text)
+                        self.previous_gesture = hand_sign_text
 
             else:
                 self.point_history.append([0, 0])
-
+                self.previous_gesture = None
             debug_image = self.draw_point_history(debug_image, self.point_history)
             debug_image = self.draw_info(debug_image, self.fps)
 

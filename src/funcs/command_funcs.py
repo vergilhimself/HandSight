@@ -73,5 +73,6 @@ def parse_key_sequence(sequence_str):
     final_modifiers = int(qt_modifiers_val)
 
     print(
-        f"parse_key_sequence: Parsed SUCCESS: '{sequence_str}' -> key={final_key_code} (Qt.Key_0x{final_key_code:X}), modifiers={final_modifiers} (Qt.KeyboardModifier_0x{final_modifiers:X})")
+        f"parse_key_sequence: Parsed SUCCESS: '{sequence_str}' -> key={final_key_code} (Qt.Key_0x{final_key_code:X}),"
+        f" modifiers={final_modifiers} (Qt.KeyboardModifier_0x{final_modifiers:X})")
     return input_type, final_key_code, final_modifiers

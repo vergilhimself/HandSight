@@ -282,6 +282,7 @@ class AssignBindingDialog(QDialog):
         for i in range(1, 13): self.key_combo.addItem(f"F{i}", getattr(Qt, f"Key_F{i}"))
         self.layout.addWidget(self.key_combo)
 
+
         self.mouse_group_label = QLabel("Выберите кнопку мыши:", self)
         self.layout.addWidget(self.mouse_group_label)
 
