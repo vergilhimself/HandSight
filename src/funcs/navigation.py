@@ -62,7 +62,7 @@ class NavigationManager:
 
     def show_gestures_widget(self):
         if not self.gestures_widget:
-            from src.gui.widgets import GesturesWidget
+            from gui.widgets import GesturesWidget
             self.gestures_widget = GesturesWidget(self.main_window, self.current_user)
             self.main_window.ui.functions_widget.addWidget(self.gestures_widget)
         self.main_window.ui.functions_widget.setCurrentWidget(self.gestures_widget)

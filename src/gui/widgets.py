@@ -240,6 +240,18 @@ class GesturesWidget(QWidget, Ui_gestures_widget):
 
 
 class AssignBindingDialog(QDialog):
+
+    SPECIAL_KEY_MAP = {
+        Qt.Key_Up: "Up",
+        Qt.Key_Down: "Down",
+        Qt.Key_Left: "Left",
+        Qt.Key_Right: "Right",
+        Qt.Key_Space: "Space",
+        Qt.Key_Return: "Enter",
+        Qt.Key_Escape: "Escape",
+        Qt.Key_Tab: "Tab"
+    }
+
     def __init__(self, gesture_name, parent=None):
         super().__init__(parent)
         self.setWindowTitle(f"Назначить действие для '{gesture_name}'")
@@ -280,8 +292,13 @@ class AssignBindingDialog(QDialog):
         self.key_combo.addItem("Escape", Qt.Key_Escape)
         self.key_combo.addItem("Tab", Qt.Key_Tab)
         for i in range(1, 13): self.key_combo.addItem(f"F{i}", getattr(Qt, f"Key_F{i}"))
-        self.layout.addWidget(self.key_combo)
 
+        self.key_combo.addItem("Стрелка Вверх", Qt.Key_Up)
+        self.key_combo.addItem("Стрелка Вниз", Qt.Key_Down)
+        self.key_combo.addItem("Стрелка Влево", Qt.Key_Left)
+        self.key_combo.addItem("Стрелка Вправо", Qt.Key_Right)
+
+        self.layout.addWidget(self.key_combo)
 
         self.mouse_group_label = QLabel("Выберите кнопку мыши:", self)
         self.layout.addWidget(self.mouse_group_label)
@@ -329,6 +346,8 @@ class AssignBindingDialog(QDialog):
                 QMessageBox.warning(self, "Ошибка", "Основная клавиша не выбрана.")
                 return
 
+            key_text = self.SPECIAL_KEY_MAP.get(key_data, self.key_combo.currentText())
+
             text_parts = []
             if modifier_data != Qt.NoModifier:
                 if modifier_data & Qt.ControlModifier: text_parts.append("Ctrl")
@@ -336,6 +355,7 @@ class AssignBindingDialog(QDialog):
                 if modifier_data & Qt.AltModifier: text_parts.append("Alt")
             text_parts.append(self.key_combo.currentText())
 
+            text_parts.append(key_text)
             self.result_key_sequence_for_db = " + ".join(text_parts)
             print(f"AssignBindingDialog: Keyboard selected. Result for DB: '{self.result_key_sequence_for_db}'")
 
