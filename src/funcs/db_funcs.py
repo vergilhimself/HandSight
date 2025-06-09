@@ -51,41 +51,28 @@ def create_user(db_path, login, password):
         return False
 
 
-def save_user_gesture_binding(db_path, user_id, gesture_name, key_sequence):
-    """
-    Сохраняет связывание жеста для пользователя в базе данных.
-    Args:
-        db_path: Путь к базе данных.
-        user_id: ID пользователя.
-        gesture_name: Имя жеста (например, "ID: Pointer, Name: Pointer").
-        key_sequence: Строка, представляющая клавишу или кнопку мыши (например, "Левая кнопка мыши", "1", "Ctrl+C").
-    """
-    print(
-        f"Сохранение: user_id={user_id}, gesture_name={gesture_name}, key_sequence={key_sequence}")  # Отладочный вывод
+def save_user_gesture_binding(db_path, user_id, gesture_name, input_type, binding_str):
+    print(f"Сохранение в БД: user_id={user_id}, gesture_name='{gesture_name}', "
+          f"input_type='{input_type}', binding_str='{binding_str}'")
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        # Определяем input_type, key_code и key_modifier на основе key_sequence
-        input_type, key_code, key_modifier = parse_key_sequence(key_sequence)
-        # Сначала удаляем существующую запись (чтобы избежать дубликатов)
-        cursor.execute("""
-            DELETE FROM UserGestureBindings
-            WHERE user_id = ? AND gesture_id = ?
-        """, (user_id, gesture_name))  # Используем gesture_name вместо gesture_id
-        print(f"Удалено записей: {cursor.rowcount}")  # Проверяем сколько записей было удалено
 
-        # Затем вставляем новую запись
+        # Удаляем старую запись
+        cursor.execute("DELETE FROM UserGestureBindings WHERE user_id = ? AND gesture_id = ?",
+                       (user_id, gesture_name))
+
+        # Вставляем новую запись в новую структуру таблицы
         cursor.execute("""
-            INSERT INTO UserGestureBindings (user_id, gesture_id, input_type, key_code, key_modifier)
-            VALUES (?, ?, ?, ?, ?)
-        """, (user_id, gesture_name, input_type, key_code, key_modifier))  # Используем gesture_name вместо gesture_id
-        print(f"Вставлено записей: {cursor.rowcount}")  # Проверяем сколько записей было вставлено
+            INSERT INTO UserGestureBindings (user_id, gesture_id, input_type, binding_str)
+            VALUES (?, ?, ?, ?)
+        """, (user_id, gesture_name, input_type, binding_str))
 
         conn.commit()
         conn.close()
-        print("Сохранение успешно!")  # Сообщение об успехе
+        print("Сохранение в БД успешно!")
     except sqlite3.Error as e:
-        print(f"Ошибка при сохранении привязки жеста: {e}")
+        print(f"Ошибка при сохранении в БД: {e}")
 
 
 def get_user_gesture_bindings(db_path, user_id):
@@ -95,22 +82,29 @@ def get_user_gesture_bindings(db_path, user_id):
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT gesture_id, input_type, key_code, key_modifier FROM UserGestureBindings WHERE user_id = ?",
-            (user_id,))
+            "SELECT gesture_id, input_type, binding_str FROM UserGestureBindings WHERE user_id = ?",
+            (user_id,)
+        )
+
         rows = cursor.fetchall()
         for row in rows:
-            gesture_id, input_type, key_code, key_modifier = row
-            # Удаляем BOM из gesture_id
-            gesture_id = gesture_id.lstrip('\ufeff')  # Удаляем BOM слева
-            gesture_key_map[gesture_id] = {
+            gesture_id, input_type, binding_str = row
+            clean_gesture_id = gesture_id.lstrip('\ufeff')
+
+            # Сохраняем в словарь в новом формате
+            gesture_key_map[clean_gesture_id] = {
                 "input_type": input_type,
-                "key_code": key_code,
-                "key_modifier": key_modifier
+                "binding_str": binding_str  # Сохраняем строку привязки
             }
+
         conn.close()
         print(f"Связывания жестов загружены из базы данных для user_id={user_id}")
+        # Пример вывода gesture_key_map: {'Open': {'input_type': 'keyboard', 'binding_str': 'Ctrl + A'}}
+        print(f"Загруженные данные: {gesture_key_map}")
+
     except sqlite3.Error as e:
         print(f"Ошибка при загрузке связываний жестов: {e}")
+
     return gesture_key_map
 
 

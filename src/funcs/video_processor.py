@@ -192,55 +192,69 @@ class VideoProcessor(QObject):
             self.frame_ready.emit(debug_image)
 
     def emulate_keypress(self, hand_sign_text):
-        print('enter data:')
-        print(f"hand_sign_text: {hand_sign_text}")
-        print(f"self.gesture_key_map: {self.gesture_key_map}")
+        clean_hand_sign_text = hand_sign_text.lstrip('\ufeff')
 
-        if hand_sign_text in self.gesture_key_map:
-            binding_info = self.gesture_key_map[hand_sign_text]
-            input_type = binding_info["input_type"]
-            key_code = binding_info["key_code"]
-            key_modifier = binding_info["key_modifier"]
+        print(f"\n--- Попытка эмуляции для жеста: '{clean_hand_sign_text}' ---")
 
-            print(
-                f"Эмуляция действия для жеста '{hand_sign_text}': Тип={input_type}, Код={key_code}, Модификатор={key_modifier}")
+        # self.gesture_key_map теперь содержит данные в новом формате
+        if clean_hand_sign_text in self.gesture_key_map:
+            binding_info = self.gesture_key_map[clean_hand_sign_text]
+            input_type = binding_info.get("input_type")
+            binding_str = binding_info.get("binding_str")
+
+            if not input_type or not binding_str:
+                print(f"Ошибка: Неполная информация о привязке для жеста '{clean_hand_sign_text}': {binding_info}")
+                return
+
+            print(f"Найдено действие: Тип='{input_type}', Привязка='{binding_str}'")
 
             try:
                 if input_type == 'keyboard':
-                    if key_modifier == 0:
-                        try:
-                            key_name = chr(key_code)
-                            pyautogui.press(key_name)
-                        except ValueError:
-                            print(f"Невозможно преобразовать key_code {key_code} в символ")
+                    # 1. Разбираем строку и приводим к нижнему регистру
+                    keys_to_press = [key.strip().lower() for key in binding_str.split('+')]
+                    print(f"Клавиши для pyautogui: {keys_to_press}")
+
+                    # 2. Проверяем, что список не пуст
+                    if not keys_to_press:
+                        print("Ошибка: после разбора строки не осталось клавиш для нажатия.")
+                        return
+
+                    # --- КЛЮЧЕВОЕ ИЗМЕНЕНИЕ ---
+                    # 3. Разделяем логику в зависимости от количества клавиш
+                    if len(keys_to_press) == 1:
+                        # Если клавиша одна (например, 'a', 'enter', 'f5')
+                        key_to_press = keys_to_press[0]
+                        print(f"Эмуляция одиночного нажатия: pyautogui.press('{key_to_press}')")
+                        pyautogui.press(key_to_press)
                     else:
-                        modifiers = []
-                        if key_modifier & Qt.ControlModifier:
-                            modifiers.append('ctrl')
-                        if key_modifier & Qt.ShiftModifier:
-                            modifiers.append('shift')
-                        if key_modifier & Qt.AltModifier:
-                            modifiers.append('alt')
+                        # Если клавиш несколько (комбинация, например, ['ctrl', 'a'])
+                        print(
+                            f"Эмуляция комбинации клавиш: pyautogui.hotkey({', '.join(repr(k) for k in keys_to_press)})")
+                        pyautogui.hotkey(*keys_to_press)
 
-                        try:
-                            key_name = chr(key_code)
-                            pyautogui.hotkey(*(modifiers + [key_name]))
-                        except ValueError:
-                            print(f"Невозможно преобразовать key_code {key_code} в символ для hotkey")
 
+                    print("Эмуляция клавиатуры выполнена успешно.")
 
                 elif input_type == 'mouse':
-                    if key_code == Qt.LeftButton:
-                        pyautogui.click()
-                    elif key_code == Qt.RightButton:
+                    action = binding_str.lower()
+                    print(f"Эмуляция действия мыши: '{action}'")
+
+                    if 'левая кнопка' in action:
+                        pyautogui.click(button='left')
+                    elif 'правая кнопка' in action:
                         pyautogui.click(button='right')
-                    elif key_code == Qt.MiddleButton:
+                    elif 'средняя кнопка' in action:
                         pyautogui.click(button='middle')
+                    else:
+                        print(f"Неизвестное действие мыши: '{binding_str}'")
+
+                else:
+                    print(f"Неизвестный тип ввода: '{input_type}'")
 
             except Exception as e:
-                print(f"Ошибка при эмуляции нажатия клавиши: {e}")
+                print(f"КРИТИЧЕСКАЯ ОШИБКА во время эмуляции: {e}")
         else:
-            print(f"Для жеста '{hand_sign_text}' не назначено действие.")
+            print(f"Для жеста '{clean_hand_sign_text}' действие не назначено.")
 
     def calc_bounding_rect(self, image, landmarks):
         image_width, image_height = image.shape[1], image.shape[0]

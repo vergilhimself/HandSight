@@ -35,7 +35,6 @@ class VideoWidget(QWidget, Ui_video_widget):
         pixmap = QPixmap.fromImage(q_image)
         self.video_label.setPixmap(pixmap.scaled(self.video_label.size(), Qt.KeepAspectRatio))
 
-
 class SettingsWidget(QWidget, Ui_settings_widget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -96,7 +95,6 @@ class SettingsWidget(QWidget, Ui_settings_widget):
         else:
             print("SettingsWidget: video_processor не установлен (None), настройки не применены к потоку.")
 
-
 class LoginWidget(QWidget, Ui_login_widget):
     def __init__(self, parent=None, main_window=None):
         super().__init__(parent)
@@ -137,7 +135,6 @@ class LoginWidget(QWidget, Ui_login_widget):
             self.close_login()
         else:
             self.error_label.setText("Пользователь с таким логином уже существует")
-
 
 class GesturesWidget(QWidget, Ui_gestures_widget):
     def __init__(self, parent=None, current_user=None):
@@ -192,7 +189,6 @@ class GesturesWidget(QWidget, Ui_gestures_widget):
 
             gesture_name = item.text()
             print(f"Attempting to show dialog for gesture: '{gesture_name}'")
-            print(f"Current user_id: {self.user_id}")
 
             if self.user_id is None:
                 print("ERROR: self.user_id is None. Cannot proceed.")
@@ -200,27 +196,38 @@ class GesturesWidget(QWidget, Ui_gestures_widget):
                 return
 
             print("Creating AssignBindingDialog...")
+            # Используем обновленный AssignBindingDialog
             dialog = AssignBindingDialog(gesture_name, self)
-            print(f"AssignBindingDialog created. Parent: {dialog.parent()}")
 
             print("Executing dialog.exec_()...")
             result_code = dialog.exec_()
             print(f"dialog.exec_() finished with result_code: {result_code}")
 
+            # Проверяем, что пользователь нажал "OK"
             if result_code == QDialog.Accepted:
-                key_sequence_str_for_db = dialog.get_key_sequence_for_db()
-                print(f"Dialog accepted. key_sequence_str_for_db: '{key_sequence_str_for_db}'")
+                # Получаем кортеж (input_type, binding_string) из нового метода
+                binding_info = dialog.get_binding_info()
+                print(f"Dialog accepted. Received binding_info: {binding_info}")
 
-                if key_sequence_str_for_db:
-                    print(f"Для жеста '{gesture_name}' назначено: '{key_sequence_str_for_db}'")
-                    self.gesture_keys[gesture_name] = key_sequence_str_for_db
+                # Проверяем, что данные не пустые
+                if binding_info and binding_info[1]:  # Проверяем, что и кортеж, и строка в нем не пустые
+                    # Распаковываем данные
+                    input_type, binding_str = binding_info
 
+                    print(f"Для жеста '{gesture_name}' будет назначено: '{binding_str}' (тип: {input_type})")
+
+                    # Обновляем локальный словарь для немедленного отображения (если нужно)
+                    self.gesture_keys[gesture_name] = binding_str
+
+                    # Вызываем обновленную функцию сохранения, передавая ей нужные параметры
                     save_user_gesture_binding(
                         db_path=self.db_path,
                         user_id=self.user_id,
                         gesture_name=gesture_name,
-                        key_sequence=key_sequence_str_for_db
+                        input_type=input_type,
+                        binding_str=binding_str  # Передаем строку для записи в БД
                     )
+
                     print(
                         "GesturesWidget: Привязка сохранена. Изменения вступят в силу при следующем запуске/перезапуске трансляции.")
                     QMessageBox.information(self, "Привязка сохранена",
@@ -239,8 +246,9 @@ class GesturesWidget(QWidget, Ui_gestures_widget):
                                  f"Произошла ошибка при открытии диалога назначения: {e}")
 
 
-class AssignBindingDialog(QDialog):
 
+class AssignBindingDialog(QDialog):
+    # Словарь для стандартизации имён специальных клавиш
     SPECIAL_KEY_MAP = {
         Qt.Key_Up: "Up",
         Qt.Key_Down: "Down",
@@ -252,27 +260,23 @@ class AssignBindingDialog(QDialog):
         Qt.Key_Tab: "Tab"
     }
 
+    # ... __init__ и другие методы остаются как в вашем изначальном коде ...
     def __init__(self, gesture_name, parent=None):
         super().__init__(parent)
         self.setWindowTitle(f"Назначить действие для '{gesture_name}'")
         self.setMinimumWidth(350)
-
         self.layout = QVBoxLayout(self)
-
         self.action_type_group = QButtonGroup(self)
         self.keyboard_radio = QRadioButton("Клавиатурное сокращение", self)
         self.mouse_radio = QRadioButton("Действие мыши", self)
         self.action_type_group.addButton(self.keyboard_radio)
         self.action_type_group.addButton(self.mouse_radio)
-
         type_layout = QHBoxLayout()
         type_layout.addWidget(self.keyboard_radio)
         type_layout.addWidget(self.mouse_radio)
         self.layout.addLayout(type_layout)
-
         self.keyboard_group_label = QLabel("Выберите клавиши:", self)
         self.layout.addWidget(self.keyboard_group_label)
-
         self.modifiers_combo = QComboBox(self)
         self.modifiers_combo.addItem("Нет модификаторов", Qt.NoModifier)
         self.modifiers_combo.addItem("Ctrl", Qt.ControlModifier)
@@ -283,34 +287,27 @@ class AssignBindingDialog(QDialog):
         self.modifiers_combo.addItem("Shift + Alt", Qt.ShiftModifier | Qt.AltModifier)
         self.modifiers_combo.addItem("Ctrl + Shift + Alt", Qt.ControlModifier | Qt.ShiftModifier | Qt.AltModifier)
         self.layout.addWidget(self.modifiers_combo)
-
         self.key_combo = QComboBox(self)
         for i in range(ord('A'), ord('Z') + 1): self.key_combo.addItem(chr(i), Qt.Key(i))
         for i in range(ord('0'), ord('9') + 1): self.key_combo.addItem(chr(i), Qt.Key(i))
+        for i in range(1, 13): self.key_combo.addItem(f"F{i}", getattr(Qt, f"Key_F{i}"))
         self.key_combo.addItem("Space", Qt.Key_Space)
         self.key_combo.addItem("Enter", Qt.Key_Return)
         self.key_combo.addItem("Escape", Qt.Key_Escape)
         self.key_combo.addItem("Tab", Qt.Key_Tab)
-        for i in range(1, 13): self.key_combo.addItem(f"F{i}", getattr(Qt, f"Key_F{i}"))
-
         self.key_combo.addItem("Стрелка Вверх", Qt.Key_Up)
         self.key_combo.addItem("Стрелка Вниз", Qt.Key_Down)
         self.key_combo.addItem("Стрелка Влево", Qt.Key_Left)
         self.key_combo.addItem("Стрелка Вправо", Qt.Key_Right)
-
         self.layout.addWidget(self.key_combo)
-
         self.mouse_group_label = QLabel("Выберите кнопку мыши:", self)
         self.layout.addWidget(self.mouse_group_label)
-
         self.mouse_button_combo = QComboBox(self)
         self.mouse_button_combo.addItem("Левая кнопка мыши", Qt.LeftButton)
         self.mouse_button_combo.addItem("Правая кнопка мыши", Qt.RightButton)
         self.mouse_button_combo.addItem("Средняя кнопка мыши", Qt.MiddleButton)
         self.layout.addWidget(self.mouse_button_combo)
-
         self.layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding))
-
         self.button_box_layout = QHBoxLayout()
         self.ok_button = QPushButton("OK", self)
         self.ok_button.clicked.connect(self.custom_accept)
@@ -320,16 +317,19 @@ class AssignBindingDialog(QDialog):
         self.button_box_layout.addWidget(self.ok_button)
         self.button_box_layout.addWidget(self.cancel_button)
         self.layout.addLayout(self.button_box_layout)
-
         self.keyboard_radio.toggled.connect(self.toggle_sections)
         self.mouse_radio.toggled.connect(self.toggle_sections)
         self.keyboard_radio.setChecked(True)
         self.toggle_sections()
-
         self.setModal(True)
-        self.result_key_sequence_for_db = None
+
+        # Здесь будет храниться итоговая строка
+        self.result_string = None
+        # И тип действия
+        self.result_input_type = None
 
     def toggle_sections(self):
+        # ... без изменений ...
         is_keyboard = self.keyboard_radio.isChecked()
         self.keyboard_group_label.setVisible(is_keyboard)
         self.modifiers_combo.setVisible(is_keyboard)
@@ -339,35 +339,30 @@ class AssignBindingDialog(QDialog):
 
     def custom_accept(self):
         if self.keyboard_radio.isChecked():
+            self.result_input_type = 'keyboard'
             modifier_data = self.modifiers_combo.currentData()
             key_data = self.key_combo.currentData()
 
-            if key_data is None:
-                QMessageBox.warning(self, "Ошибка", "Основная клавиша не выбрана.")
-                return
-
-            key_text = self.SPECIAL_KEY_MAP.get(key_data, self.key_combo.currentText())
+            # Получаем стандартизированное имя клавиши (e.g., "Up" или "A")
+            key_name = self.SPECIAL_KEY_MAP.get(key_data, self.key_combo.currentText())
 
             text_parts = []
-            if modifier_data != Qt.NoModifier:
-                if modifier_data & Qt.ControlModifier: text_parts.append("Ctrl")
-                if modifier_data & Qt.ShiftModifier: text_parts.append("Shift")
-                if modifier_data & Qt.AltModifier: text_parts.append("Alt")
-            text_parts.append(self.key_combo.currentText())
+            if modifier_data & Qt.ControlModifier: text_parts.append("Ctrl")
+            if modifier_data & Qt.ShiftModifier: text_parts.append("Shift")
+            if modifier_data & Qt.AltModifier: text_parts.append("Alt")
 
-            text_parts.append(key_text)
-            self.result_key_sequence_for_db = " + ".join(text_parts)
-            print(f"AssignBindingDialog: Keyboard selected. Result for DB: '{self.result_key_sequence_for_db}'")
+            text_parts.append(key_name)
+            self.result_string = " + ".join(text_parts)
 
         elif self.mouse_radio.isChecked():
-            self.result_key_sequence_for_db = self.mouse_button_combo.currentText()
-            print(f"AssignBindingDialog: Mouse selected. Result for DB: '{self.result_key_sequence_for_db}'")
+            self.result_input_type = 'mouse'
+            # Для мыши просто сохраняем текст
+            self.result_string = self.mouse_button_combo.currentText()
         else:
-            QMessageBox.warning(self, "Ошибка", "Не выбран тип действия (клавиатура или мышь).")
             return
-        print(
-            f"AssignBindingDialog: Keyboard selected. Result for DB: '{self.result_key_sequence_for_db}'")
+
         super().accept()
 
-    def get_key_sequence_for_db(self):
-        return self.result_key_sequence_for_db
+    def get_binding_info(self):
+        """Возвращает кортеж (input_type, binding_string)."""
+        return (self.result_input_type, self.result_string)
