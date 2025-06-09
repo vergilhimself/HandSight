@@ -15,5 +15,7 @@ tensorflow
 mediapipe
 PyQt5
 msvc-runtime
+PyQt5-sip
+pycaw
 #Для выполнения впишите в командной строке
 #pip install -r requirements.txt
